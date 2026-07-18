@@ -12,6 +12,7 @@ const ItemUIScene = preload("res://src/ui/backpack/ItemUI.tscn")
 @onready var stage_label: Label = $MainLayout/Header/StageLabel
 @onready var female_title_label: Label = $MainLayout/HBox/GridArea/FemaleTitle
 @onready var fusion_button: Button = $MainLayout/Header/FusionButton
+@onready var reroll_button: Button = $MainLayout/ShopArea/ShopHeader/RerollButton
 
 var cell_size: float = 64.0
 var cell_nodes: Dictionary = {} # Vector2i -> GridCellUI
@@ -26,6 +27,7 @@ var drag_original_stash_index: int = -1
 
 # Pool of items for the shop (we can define some test items)
 var test_items: Array[Resource] = []
+var current_shop_items: Array[Resource] = []
 
 func _ready() -> void:
 	# 1. Load C# Singletons and connect signals
@@ -46,11 +48,16 @@ func _ready() -> void:
 	_setup_mock_female_if_needed()
 
 	# 4. Initial UI draws
+	# Connect reroll button
+	if reroll_button:
+		reroll_button.pressed.connect(_on_reroll_pressed)
+	
+	# Generate initial shop items (at the very beginning / start of scene load)
+	_generate_new_shop_items()
+
 	_on_gold_changed(gm.Gold)
 	_on_stage_changed(gm.CurrentStage)
 	_on_female_changed(im.CurrentFemale)
-	
-	_refresh_shop()
 
 func _setup_test_items() -> void:
 	# Create test items in code for convenience
@@ -174,6 +181,8 @@ func _setup_mock_female_if_needed() -> void:
 
 func _on_gold_changed(new_gold: int) -> void:
 	gold_label.text = "GOLD: %d" % new_gold
+	if current_shop_items.size() > 0:
+		_refresh_shop()
 
 func _on_stage_changed(new_stage: int) -> void:
 	stage_label.text = "STAGE: %d" % new_stage
@@ -272,16 +281,42 @@ func _on_stash_updated() -> void:
 		item_ui.setup(item, "", i, 0, cell_size)
 		item_ui.drag_started.connect(_on_item_drag_started)
 
+func _generate_new_shop_items() -> void:
+	current_shop_items.clear()
+	for i in range(3):
+		if test_items.size() > 0:
+			current_shop_items.append(test_items[randi() % test_items.size()])
+
+func _on_reroll_pressed() -> void:
+	if GameManager.Gold >= 2:
+		if GameManager.SpendGold(2):
+			_generate_new_shop_items()
+			_refresh_shop()
+
 func _refresh_shop() -> void:
 	for child in shop_container.get_children():
 		child.queue_free()
 
-	# Spawn 3 random items for sale
-	for i in range(3):
-		var item = test_items[randi() % test_items.size()]
+	# Update Reroll button disabled state
+	if reroll_button:
+		reroll_button.disabled = GameManager.Gold < 2
+
+	# Draw items in current_shop_items
+	for i in range(current_shop_items.size()):
+		var item = current_shop_items[i]
+		
 		var shop_item_panel = PanelContainer.new()
 		shop_item_panel.custom_minimum_size = Vector2(100, 120)
-		
+		shop_container.add_child(shop_item_panel)
+
+		if item == null:
+			var sold_lbl = Label.new()
+			sold_lbl.text = "SOLD"
+			sold_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			sold_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			shop_item_panel.add_child(sold_lbl)
+			continue
+
 		var vbox = VBoxContainer.new()
 		shop_item_panel.add_child(vbox)
 
@@ -298,13 +333,16 @@ func _refresh_shop() -> void:
 		var buy_btn = Button.new()
 		buy_btn.text = "BUY"
 		buy_btn.disabled = GameManager.Gold < item.BasePrice
+		
+		# Capture index for signal
+		var item_idx = i
 		buy_btn.pressed.connect(func():
 			if InventoryManager.BuyItem(item):
+				current_shop_items[item_idx] = null
 				_refresh_shop()
 		)
 		vbox.add_child(buy_btn)
 
-		shop_container.add_child(shop_item_panel)
 
 func _on_item_drag_started(item_ui: ItemUI) -> void:
 	if dragging_item != null: return

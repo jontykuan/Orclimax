@@ -100,7 +100,7 @@ func _check_player_overlap(delta: float) -> void:
 	
 	# Horizontal check: origins are at bottom center, player width ~32, enemy ~24
 	var dx := abs(target_player.global_position.x - global_position.x)
-	var overlap_x := dx < 24.0 # 12 (enemy half-width) + 16 (player half-width) - 4 leeway
+	var overlap_x: bool = dx < 24.0 # 12 (enemy half-width) + 16 (player half-width) - 4 leeway
 	
 	# Vertical check: origins are at feet (bottom center)
 	# Player is at global_position.y, top is y - height
@@ -110,7 +110,7 @@ func _check_player_overlap(delta: float) -> void:
 	
 	# Check if vertical intervals [y-height, y] and [y-48, y] overlap
 	# If player is standing on same level, dy ~ 0, which is between -player_height and 48
-	var overlap_y := (dy > -player_height and dy < 48.0)
+	var overlap_y: bool = (dy > -player_height and dy < 48.0)
 	
 	if overlap_x and overlap_y:
 		CombatManager.TakeDamage(damage * delta)

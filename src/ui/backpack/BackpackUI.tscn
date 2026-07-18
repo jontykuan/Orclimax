@@ -122,9 +122,17 @@ theme_override_constants/v_separation = 10
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="Label" type="Label" parent="MainLayout/ShopArea"]
+[node name="ShopHeader" type="HBoxContainer" parent="MainLayout/ShopArea"]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="MainLayout/ShopArea/ShopHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Black Market Shop"
+
+[node name="RerollButton" type="Button" parent="MainLayout/ShopArea/ShopHeader"]
+layout_mode = 2
+text = "Reroll Shop (2 G)"
 
 [node name="ShopItems" type="HBoxContainer" parent="MainLayout/ShopArea"]
 layout_mode = 2
