@@ -15,6 +15,10 @@ var blocks: Array[ColorRect] = []
 # Mouse drag state
 var is_dragging: bool = false
 var drag_offset: Vector2 = Vector2.ZERO
+var press_pos: Vector2 = Vector2.ZERO
+var drag_threshold: float = 6.0
+var has_moved_for_drag: bool = false
+var is_pressed: bool = false
 
 func setup(p_item_ref: Resource, p_instance_id: String, p_stash_index: int, p_rotation_steps: int, p_cell_size: float = 64.0) -> void:
 	item_ref = p_item_ref
@@ -60,6 +64,10 @@ func update_visuals() -> void:
 			border_color = Color(0.2, 0.7, 1.0, 0.9) # Cyan
 			fill_color = Color(0.1, 0.2, 0.3, 0.8)
 
+	if item_ref and item_ref.IsLocked:
+		border_color = Color(1.0, 0.1, 0.1, 1.0) # Bright red lock border
+
+
 	# 2. Draw blocks for each shape offset
 	var min_x = 9999
 	var max_x = -9999
@@ -99,7 +107,10 @@ func update_visuals() -> void:
 
 	# 4. Add a label on the anchor cell (0, 0)
 	var label = Label.new()
-	label.text = item_ref.ItemName
+	if item_ref.IsLocked:
+		label.text = "🔒 " + item_ref.ItemName
+	else:
+		label.text = item_ref.ItemName
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -113,10 +124,27 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
-				# Start drag
+				is_pressed = true
+				press_pos = event.position
+				has_moved_for_drag = false
+				accept_event()
+			else:
+				if is_pressed:
+					is_pressed = false
+					if not has_moved_for_drag:
+						_toggle_lock()
+					accept_event()
+					
+	elif event is InputEventMouseMotion:
+		if is_pressed and not has_moved_for_drag:
+			if event.position.distance_to(press_pos) > drag_threshold:
+				has_moved_for_drag = true
+				drag_offset = press_pos
 				drag_started.emit(self)
-				drag_offset = event.position
 				accept_event()
-			elif is_dragging:
-				# Drop event is handled by BackpackUI
-				accept_event()
+
+func _toggle_lock() -> void:
+	if item_ref:
+		item_ref.IsLocked = not item_ref.IsLocked
+		update_visuals()
+

@@ -11,6 +11,7 @@ namespace Orclimax.Core
         [Export] public string ItemName { get; set; } = "";
         [Export] public ItemCategory Category { get; set; } = ItemCategory.Accessory;
         [Export] public PlacementZone RequiredZone { get; set; } = PlacementZone.General;
+        [Export] public bool IsLocked { get; set; } = false;
 
         // Visual properties
         [Export] public Texture2D Icon { get; set; }

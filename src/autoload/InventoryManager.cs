@@ -132,7 +132,8 @@ namespace Orclimax.Autoload
             
             if (GameManager.Instance.SpendGold(item.BasePrice))
             {
-                Stash.Add(item);
+                var duplicateItem = (ItemData)item.Duplicate(true);
+                Stash.Add(duplicateItem);
                 EmitSignal(SignalName.StashUpdated);
                 return true;
             }
@@ -142,7 +143,8 @@ namespace Orclimax.Autoload
         public void AddItemToStash(ItemData item)
         {
             if (item == null) return;
-            Stash.Add(item);
+            var duplicateItem = (ItemData)item.Duplicate(true);
+            Stash.Add(duplicateItem);
             EmitSignal(SignalName.StashUpdated);
         }
 
@@ -191,7 +193,7 @@ namespace Orclimax.Autoload
 
                         // Find matching recipe
                         FusionRecipe matchingRecipe = FindRecipe(itemA.Item, itemB.Item);
-                        if (matchingRecipe != null && AreAdjacent(itemA, itemB))
+                        if (matchingRecipe != null && !itemA.Item.IsLocked && !itemB.Item.IsLocked && AreAdjacent(itemA, itemB))
                         {
                             Vector2I mergeAnchor = itemA.AnchorCoords;
                             int mergeRotation = itemA.RotationSteps;
@@ -201,14 +203,15 @@ namespace Orclimax.Autoload
                             BackpackGrid.RemoveItem(itemB.InstanceId);
 
                             // Try to place the result where item A was
-                            if (BackpackGrid.CanPlaceItem(matchingRecipe.Result, mergeAnchor, mergeRotation))
+                            var resultDuplicate = (ItemData)matchingRecipe.Result.Duplicate(true);
+                            if (BackpackGrid.CanPlaceItem(resultDuplicate, mergeAnchor, mergeRotation))
                             {
-                                BackpackGrid.PlaceItem(matchingRecipe.Result, mergeAnchor, mergeRotation);
+                                BackpackGrid.PlaceItem(resultDuplicate, mergeAnchor, mergeRotation);
                             }
                             else
                             {
                                 // Otherwise, send to stash
-                                Stash.Add(matchingRecipe.Result);
+                                Stash.Add(resultDuplicate);
                             }
 
                             loop = true;

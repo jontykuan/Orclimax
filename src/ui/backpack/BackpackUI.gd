@@ -28,6 +28,7 @@ var drag_original_stash_index: int = -1
 # Pool of items for the shop (we can define some test items)
 var test_items: Array[Resource] = []
 var current_shop_items: Array[Resource] = []
+var shop_slots_locked: Array[bool] = [false, false, false]
 
 func _ready() -> void:
 	# 1. Load C# Singletons and connect signals
@@ -55,9 +56,13 @@ func _ready() -> void:
 	# Generate initial shop items (at the very beginning / start of scene load)
 	_generate_new_shop_items()
 
+	# Trigger automatic fusions (after battle, when reloading the camp/shop UI)
+	im.TriggerFusions()
+
 	_on_gold_changed(gm.Gold)
 	_on_stage_changed(gm.CurrentStage)
 	_on_female_changed(im.CurrentFemale)
+	_on_stash_updated() # Force initial stash draw so dropped items show up!
 
 func _setup_test_items() -> void:
 	# Create test items in code for convenience
@@ -282,13 +287,27 @@ func _on_stash_updated() -> void:
 		item_ui.drag_started.connect(_on_item_drag_started)
 
 func _generate_new_shop_items() -> void:
-	current_shop_items.clear()
+	if current_shop_items.size() < 3:
+		current_shop_items.resize(3)
+		current_shop_items.fill(null)
+
 	var temp_pool = test_items.duplicate()
+	# Remove already locked items from temp_pool to prevent duplicates in other slots
 	for i in range(3):
+		if shop_slots_locked[i] and current_shop_items[i] != null:
+			for j in range(temp_pool.size() - 1, -1, -1):
+				if temp_pool[j].Id == current_shop_items[i].Id:
+					temp_pool.remove_at(j)
+
+	for i in range(3):
+		if shop_slots_locked[i]:
+			continue
 		if temp_pool.size() > 0:
 			var idx = randi() % temp_pool.size()
-			current_shop_items.append(temp_pool[idx])
+			current_shop_items[i] = temp_pool[idx]
 			temp_pool.remove_at(idx)
+		else:
+			current_shop_items[i] = null
 
 func _on_reroll_pressed() -> void:
 	if GameManager.Gold >= 2:
@@ -312,6 +331,17 @@ func _refresh_shop() -> void:
 		shop_item_panel.custom_minimum_size = Vector2(100, 120)
 		shop_container.add_child(shop_item_panel)
 
+		# Capture index for right-click toggles and signal connections
+		var item_idx = i
+
+		# Listen to right clicks on the shop slot panel to toggle lock
+		shop_item_panel.gui_input.connect(func(event):
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+				if current_shop_items[item_idx] != null:
+					shop_slots_locked[item_idx] = not shop_slots_locked[item_idx]
+					_refresh_shop()
+		)
+
 		if item == null:
 			var sold_lbl = Label.new()
 			sold_lbl.text = "SOLD"
@@ -320,28 +350,38 @@ func _refresh_shop() -> void:
 			shop_item_panel.add_child(sold_lbl)
 			continue
 
+		# Color tint locked vs unlocked
+		if shop_slots_locked[i]:
+			shop_item_panel.self_modulate = Color(1.0, 0.85, 0.3) # Gold tint for locked slot
+		else:
+			shop_item_panel.self_modulate = Color(1.0, 1.0, 1.0) # Normal tint
+
 		var vbox = VBoxContainer.new()
+		vbox.mouse_filter = Control.MOUSE_FILTER_PASS
 		shop_item_panel.add_child(vbox)
 
 		var name_lbl = Label.new()
-		name_lbl.text = item.ItemName
+		if shop_slots_locked[i]:
+			name_lbl.text = "🔒 " + item.ItemName
+		else:
+			name_lbl.text = item.ItemName
 		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_lbl.mouse_filter = Control.MOUSE_FILTER_PASS
 		vbox.add_child(name_lbl)
 
 		var price_lbl = Label.new()
 		price_lbl.text = "%d G" % item.BasePrice
 		price_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		price_lbl.mouse_filter = Control.MOUSE_FILTER_PASS
 		vbox.add_child(price_lbl)
 
 		var buy_btn = Button.new()
 		buy_btn.text = "BUY"
 		buy_btn.disabled = GameManager.Gold < item.BasePrice
-		
-		# Capture index for signal
-		var item_idx = i
 		buy_btn.pressed.connect(func():
 			if InventoryManager.BuyItem(item):
 				current_shop_items[item_idx] = null
+				shop_slots_locked[item_idx] = false # Unlock on purchase
 				_refresh_shop()
 		)
 		vbox.add_child(buy_btn)
