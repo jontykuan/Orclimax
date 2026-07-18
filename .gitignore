@@ -5,6 +5,7 @@
 *.pdb
 *.exe
 *.log
+*.env
 bin/
 obj/
 
