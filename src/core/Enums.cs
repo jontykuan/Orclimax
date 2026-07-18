@@ -1,4 +1,6 @@
 using System;
+// Self-updating knowledge graph active
+
 
 namespace Orclimax.Core
 {
