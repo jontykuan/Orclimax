@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1g3g8y3j2b4i"]
+
+[ext_resource type="Script" path="res://src/ui/backpack/GridCellUI.gd" id="1_cell"]
+
+[node name="GridCellUI" type="ColorRect"]
+custom_minimum_size = Vector2(64, 64)
+offset_right = 64.0
+offset_bottom = 64.0
+color = Color(0.2, 0.2, 0.2, 0.4)
+script = ExtResource("1_cell")

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="24" fill="#141419"/>
+  <!-- Orc Face Silhouette -->
+  <path d="M34,35 C34,35 24,65 34,85 C40,97 48,100 64,100 C80,100 88,97 94,85 C104,65 94,35 94,35 L34,35 Z" fill="#2d7d46"/>
+  <!-- Orc Ears -->
+  <path d="M34,45 L14,35 L30,60 Z" fill="#225e35"/>
+  <path d="M94,45 L114,35 L98,60 Z" fill="#225e35"/>
+  <!-- Glowing Red Eyes -->
+  <ellipse cx="48" cy="60" rx="8" ry="5" fill="#ff3b30"/>
+  <ellipse cx="80" cy="60" rx="8" ry="5" fill="#ff3b30"/>
+  <!-- Tusks -->
+  <path d="M44,85 L40,70 L48,75 Z" fill="#ffffff"/>
+  <path d="M84,85 L88,70 L80,75 Z" fill="#ffffff"/>
+  <!-- Mouth line -->
+  <path d="M48,80 Q64,85 80,80" stroke="#141419" stroke-width="3" fill="none"/>
+</svg>

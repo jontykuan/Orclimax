@@ -1,0 +1,136 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx6q8c1i1g2v5"]
+
+[ext_resource type="Script" path="res://src/ui/backpack/BackpackUI.gd" id="1_bp"]
+
+[node name="BackpackUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bp")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.1, 1)
+
+[node name="MainLayout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="Header" type="HBoxContainer" parent="MainLayout"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="StageLabel" type="Label" parent="MainLayout/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "STAGE: 1"
+
+[node name="Spacer" type="Control" parent="MainLayout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GoldLabel" type="Label" parent="MainLayout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.976471, 0.811765, 0.317647, 1)
+theme_override_font_sizes/font_size = 20
+text = "GOLD: 15"
+
+[node name="Spacer2" type="Control" parent="MainLayout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FusionButton" type="Button" parent="MainLayout/Header"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 40)
+text = "Fuse Items"
+
+[node name="StartCombatButton" type="Button" parent="MainLayout/Header"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 40)
+text = "Enter Combat"
+
+[node name="HBox" type="HBoxContainer" parent="MainLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="GridArea" type="VBoxContainer" parent="MainLayout/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.2
+theme_override_constants/separation = 10
+
+[node name="FemaleTitle" type="Label" parent="MainLayout/HBox/GridArea"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "Carrier: [Un裝載]"
+
+[node name="Panel" type="Panel" parent="MainLayout/HBox/GridArea"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GridContainer" type="Control" parent="MainLayout/HBox/GridArea/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StashArea" type="VBoxContainer" parent="MainLayout/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="MainLayout/HBox/StashArea"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Stashed Accessories"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainLayout/HBox/StashArea"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StashContainer" type="HFlowContainer" parent="MainLayout/HBox/StashArea/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="ShopArea" type="VBoxContainer" parent="MainLayout"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="MainLayout/ShopArea"]
+layout_mode = 2
+text = "Black Market Shop"
+
+[node name="ShopItems" type="HBoxContainer" parent="MainLayout/ShopArea"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 120)
+theme_override_constants/separation = 15
+alignment = 1
+
+[connection signal="pressed" from="MainLayout/Header/FusionButton" to="." method="_on_fusion_button_pressed"]
+[connection signal="pressed" from="MainLayout/Header/StartCombatButton" to="." method="_on_start_combat_pressed"]

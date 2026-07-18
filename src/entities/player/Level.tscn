@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://cx6q8c1i1g2v6"]
+
+[ext_resource type="Script" path="res://src/entities/player/Level.gd" id="1_lvl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(4000, 40)
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_lvl")
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(576, 500)
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="ColorRect" type="ColorRect" parent="Floor"]
+offset_left = -2000.0
+offset_top = -20.0
+offset_right = 2000.0
+offset_bottom = 20.0
+color = Color(0.12, 0.15, 0.18, 1)
+
+[node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 1.8
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
