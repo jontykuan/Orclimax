@@ -1,0 +1,22 @@
+# Godot/Mono/C# exclusions
+.godot/
+.mono/
+*.dll
+*.pdb
+*.exe
+*.log
+bin/
+obj/
+
+# Graphify / CRG exclusions
+graphify-out/
+.code-review-graph/
+.graphifyignore
+.code-review-graphignore
+.mcp.json
+.cursorrules
+.windsurfrules
+.opencode.json
+.kiro/
+AGENTS.md
+GEMINI.md
