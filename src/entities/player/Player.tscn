@@ -18,24 +18,23 @@ position = Vector2(0, -100)
 limit_bottom = 600
 
 [node name="CompositeVisuals" type="Node2D" parent="."]
-position = Vector2(0, -32)
 
 [node name="Orc" type="ColorRect" parent="CompositeVisuals"]
 offset_left = -16.0
-offset_top = -32.0
+offset_top = -64.0
 offset_right = 16.0
-offset_bottom = 32.0
+offset_bottom = 0.0
 color = Color(0.2, 0.5, 0.2, 1)
 
 [node name="Female" type="ColorRect" parent="CompositeVisuals"]
 offset_left = 12.0
-offset_top = -20.0
+offset_top = -52.0
 offset_right = 36.0
-offset_bottom = 28.0
+offset_bottom = -4.0
 color = Color(0.9, 0.4, 0.6, 1)
 
 [node name="HeartParticles" type="CPUParticles2D" parent="CompositeVisuals"]
-position = Vector2(16, 0)
+position = Vector2(16, -32)
 emitting = false
 amount = 20
 lifetime = 1.0

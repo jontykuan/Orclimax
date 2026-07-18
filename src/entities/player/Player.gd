@@ -28,10 +28,13 @@ var last_press_right_time: float = -999.0
 var DOUBLE_TAP_DELAY: float = 0.25
 
 # Crouching collision variables
+@export var crouch_speed_multiplier: float = 0.4
+@export var crouch_height_ratio: float = 0.6
+
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 var original_collision_height: float = 64.0
 var original_collision_pos_y: float = -32.0
-var visual_base_y: float = -32.0
+var is_crouching: bool = false
 
 func _ready() -> void:
 	# Add to group so enemies can identify player
@@ -81,24 +84,20 @@ func _handle_normal_movement(_delta: float) -> void:
 	# Handle Horizontal Input
 	var dir := Input.get_axis("ui_left", "ui_right")
 	
-	# Crouch logic (reduce speed and scale down sprite height)
-	var is_crouching := Input.is_action_pressed("ui_down")
+	# Crouch logic (reduce speed and scale down parent visual node)
+	is_crouching = Input.is_action_pressed("ui_down")
 	var speed_multiplier := 1.0
 	
 	if is_crouching:
-		speed_multiplier = 0.4
-		orc_sprite.scale.y = 0.6
-		female_sprite.scale.y = 0.6
-		visual_base_y = -19.2 # -32 + 12.8 (sprite bottom stays at y=0)
+		speed_multiplier = crouch_speed_multiplier
+		$CompositeVisuals.scale.y = crouch_height_ratio
 		
 		# Shrink collision shape downwards (bottom remains at y=0)
 		if collision_shape and collision_shape.shape is RectangleShape2D:
-			collision_shape.shape.size.y = original_collision_height * 0.6
-			collision_shape.position.y = -original_collision_height * 0.6 / 2.0
+			collision_shape.shape.size.y = original_collision_height * crouch_height_ratio
+			collision_shape.position.y = -original_collision_height * crouch_height_ratio / 2.0
 	else:
-		orc_sprite.scale.y = 1.0
-		female_sprite.scale.y = 1.0
-		visual_base_y = -32.0
+		$CompositeVisuals.scale.y = 1.0
 		
 		# Restore original collision shape size
 		if collision_shape and collision_shape.shape is RectangleShape2D:
@@ -152,7 +151,9 @@ func _update_visuals_and_animations() -> void:
 	female_sprite.position.x = 12.0 + sin(time_tick * speed_freq) * (5.0 + ratio * 10.0)
 	
 	# Small vertical bounce for both (running/thrusting sync)
-	$CompositeVisuals.position.y = visual_base_y + sin(time_tick * speed_freq * 2.0) * (2.0 + ratio * 4.0)
+	# Scale down the bounce amplitude if crouching
+	var bounce_amplitude: float = (2.0 + ratio * 4.0) * (crouch_height_ratio if is_crouching else 1.0)
+	$CompositeVisuals.position.y = sin(time_tick * speed_freq * 2.0) * bounce_amplitude
 
 	# 2. Particles intensity
 	# Make pink hearts particles spawn more frequently and move faster as pleasure rises!
