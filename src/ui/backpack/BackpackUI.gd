@@ -379,7 +379,7 @@ func _input(event: InputEvent) -> void:
 		# Hover shop to sell visual highlight
 		var shop_rect: Rect2 = $MainLayout/ShopArea.get_global_rect()
 		var is_over_shop: bool = shop_rect.has_point(event.global_position)
-		var shop_lbl: Label = $MainLayout/ShopArea/Label
+		var shop_lbl: Label = $MainLayout/ShopArea/ShopHeader/Label
 		if is_over_shop:
 			shop_lbl.text = "Black Market Shop (DROP TO SELL - 50% G)"
 			shop_lbl.add_theme_color_override("font_color", Color(0.98, 0.81, 0.32)) # gold
@@ -445,7 +445,7 @@ func _handle_drop() -> void:
 	_clear_cell_highlights()
 	
 	# Reset shop label visual overrides
-	var shop_lbl: Label = $MainLayout/ShopArea/Label
+	var shop_lbl: Label = $MainLayout/ShopArea/ShopHeader/Label
 	shop_lbl.text = "Black Market Shop"
 	shop_lbl.remove_theme_color_override("font_color")
 

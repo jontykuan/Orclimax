@@ -114,4 +114,3 @@ func _check_player_overlap(delta: float) -> void:
 	
 	if overlap_x and overlap_y:
 		CombatManager.TakeDamage(damage * delta)
-
