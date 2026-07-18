@@ -21,6 +21,9 @@ namespace Orclimax.Autoload
         // List of all available recipes
         public Godot.Collections.Array<FusionRecipe> Recipes { get; private set; } = new Godot.Collections.Array<FusionRecipe>();
 
+        public Godot.Collections.Array<ItemData> CurrentShopItems { get; set; } = new Godot.Collections.Array<ItemData> { null, null, null };
+        public Godot.Collections.Array<bool> ShopSlotsLocked { get; set; } = new Godot.Collections.Array<bool> { false, false, false };
+
         public override void _EnterTree()
         {
             if (Instance == null)

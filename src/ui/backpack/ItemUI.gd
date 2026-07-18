@@ -147,4 +147,3 @@ func _toggle_lock() -> void:
 	if item_ref:
 		item_ref.IsLocked = not item_ref.IsLocked
 		update_visuals()
-

@@ -27,8 +27,17 @@ var drag_original_stash_index: int = -1
 
 # Pool of items for the shop (we can define some test items)
 var test_items: Array[Resource] = []
-var current_shop_items: Array[Resource] = []
-var shop_slots_locked: Array[bool] = [false, false, false]
+var current_shop_items: Array:
+	get:
+		return InventoryManager.CurrentShopItems
+	set(val):
+		InventoryManager.CurrentShopItems = val
+
+var shop_slots_locked: Array:
+	get:
+		return InventoryManager.ShopSlotsLocked
+	set(val):
+		InventoryManager.ShopSlotsLocked = val
 
 func _ready() -> void:
 	# 1. Load C# Singletons and connect signals
@@ -327,7 +336,7 @@ func _refresh_shop() -> void:
 	for i in range(current_shop_items.size()):
 		var item = current_shop_items[i]
 		
-		var shop_item_panel = PanelContainer.new()
+		var shop_item_panel = Button.new()
 		shop_item_panel.custom_minimum_size = Vector2(100, 120)
 		shop_container.add_child(shop_item_panel)
 
