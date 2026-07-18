@@ -25,7 +25,13 @@ var dash_cooldown: float = 0.6
 # Double tap tracking
 var last_press_left_time: float = -999.0
 var last_press_right_time: float = -999.0
-const DOUBLE_TAP_DELAY: float = 0.25
+var DOUBLE_TAP_DELAY: float = 0.25
+
+# Crouching collision variables
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
+var original_collision_height: float = 64.0
+var original_collision_pos_y: float = -32.0
+var visual_base_y: float = -32.0
 
 func _ready() -> void:
 	# Add to group so enemies can identify player
@@ -38,6 +44,11 @@ func _ready() -> void:
 	
 	# Update local stats initially
 	move_speed = cm.MoveSpeed
+
+	# Store original collision shape metrics
+	if collision_shape and collision_shape.shape is RectangleShape2D:
+		original_collision_height = collision_shape.shape.size.y
+		original_collision_pos_y = collision_shape.position.y
 
 func _physics_process(delta: float) -> void:
 	# Add gravity
@@ -78,9 +89,21 @@ func _handle_normal_movement(_delta: float) -> void:
 		speed_multiplier = 0.4
 		orc_sprite.scale.y = 0.6
 		female_sprite.scale.y = 0.6
+		visual_base_y = -19.2 # -32 + 12.8 (sprite bottom stays at y=0)
+		
+		# Shrink collision shape downwards (bottom remains at y=0)
+		if collision_shape and collision_shape.shape is RectangleShape2D:
+			collision_shape.shape.size.y = original_collision_height * 0.6
+			collision_shape.position.y = -original_collision_height * 0.6 / 2.0
 	else:
 		orc_sprite.scale.y = 1.0
 		female_sprite.scale.y = 1.0
+		visual_base_y = -32.0
+		
+		# Restore original collision shape size
+		if collision_shape and collision_shape.shape is RectangleShape2D:
+			collision_shape.shape.size.y = original_collision_height
+			collision_shape.position.y = original_collision_pos_y
 
 	# Apply horizontal velocity
 	velocity.x = dir * move_speed * speed_multiplier
@@ -129,7 +152,7 @@ func _update_visuals_and_animations() -> void:
 	female_sprite.position.x = 12.0 + sin(time_tick * speed_freq) * (5.0 + ratio * 10.0)
 	
 	# Small vertical bounce for both (running/thrusting sync)
-	$CompositeVisuals.position.y = -32.0 + sin(time_tick * speed_freq * 2.0) * (2.0 + ratio * 4.0)
+	$CompositeVisuals.position.y = visual_base_y + sin(time_tick * speed_freq * 2.0) * (2.0 + ratio * 4.0)
 
 	# 2. Particles intensity
 	# Make pink hearts particles spawn more frequently and move faster as pleasure rises!

@@ -42,12 +42,8 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# Damage player on contact
-	for i in get_slide_collision_count():
-		var collision = get_slide_collision(i)
-		var collider = collision.get_collider()
-		if collider and collider.is_in_group("player"):
-			CombatManager.TakeDamage(damage * delta)
+	# Damage player on overlap (AABB check since physical collision mask is 4)
+	_check_player_overlap(delta)
 
 func take_damage(amount: float) -> void:
 	hp -= amount
@@ -97,3 +93,25 @@ func _spawn_loot() -> void:
 
 	# Print floating alert
 	print("Loot Dropped: ", dropped_item.ItemName, " (Sent to Stash!)")
+
+func _check_player_overlap(delta: float) -> void:
+	if not target_player:
+		return
+	
+	# Horizontal check: origins are at bottom center, player width ~32, enemy ~24
+	var dx := abs(target_player.global_position.x - global_position.x)
+	var overlap_x := dx < 24.0 # 12 (enemy half-width) + 16 (player half-width) - 4 leeway
+	
+	# Vertical check: origins are at feet (bottom center)
+	# Player is at global_position.y, top is y - height
+	# Enemy is at global_position.y, top is y - 48
+	var dy := target_player.global_position.y - global_position.y # negative if player is higher
+	var player_height: float = 38.4 if target_player.orc_sprite.scale.y < 0.8 else 64.0
+	
+	# Check if vertical intervals [y-height, y] and [y-48, y] overlap
+	# If player is standing on same level, dy ~ 0, which is between -player_height and 48
+	var overlap_y := (dy > -player_height and dy < 48.0)
+	
+	if overlap_x and overlap_y:
+		CombatManager.TakeDamage(damage * delta)
+

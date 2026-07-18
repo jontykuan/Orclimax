@@ -126,7 +126,27 @@ func _setup_test_items() -> void:
 	recipe.ComponentB = poison
 	recipe.Result = poison_sword
 	
-	InventoryManager.Recipes.append(recipe)
+	# Register a fusion recipe: Rusty Sword + Vibrator = Vibrating Sword
+	var vibrating_sword = load("res://src/core/ItemData.cs").new()
+	vibrating_sword.Id = "wpn_vibrating_sword"
+	vibrating_sword.ItemName = "Vibrating Sword"
+	vibrating_sword.Category = 0 # Weapon
+	vibrating_sword.RequiredZone = 0 # General
+	vibrating_sword.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1)] # 1x2 vertical
+	vibrating_sword.Damage = 12.0
+	vibrating_sword.PleasureGain = 1.5
+	vibrating_sword.Cooldown = 1.4
+	vibrating_sword.BasePrice = 18
+	vibrating_sword.SynergyDescription = "Deals damage and increases pleasure simultaneously."
+
+	var recipe2 = load("res://src/core/FusionRecipe.cs").new()
+	recipe2.ComponentA = sword
+	recipe2.ComponentB = dildo
+	recipe2.Result = vibrating_sword
+
+	if InventoryManager.Recipes.size() == 0:
+		InventoryManager.Recipes.append(recipe)
+		InventoryManager.Recipes.append(recipe2)
 
 func _setup_mock_female_if_needed() -> void:
 	var im = InventoryManager
@@ -317,6 +337,17 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		dragging_item.global_position = event.global_position - dragging_item.drag_offset
 		_highlight_hovered_cells()
+		
+		# Hover shop to sell visual highlight
+		var shop_rect: Rect2 = $MainLayout/ShopArea.get_global_rect()
+		var is_over_shop: bool = shop_rect.has_point(event.global_position)
+		var shop_lbl: Label = $MainLayout/ShopArea/Label
+		if is_over_shop:
+			shop_lbl.text = "Black Market Shop (DROP TO SELL - 50% G)"
+			shop_lbl.add_theme_color_override("font_color", Color(0.98, 0.81, 0.32)) # gold
+		else:
+			shop_lbl.text = "Black Market Shop"
+			shop_lbl.remove_theme_color_override("font_color")
 
 	# 2. Right click / R key to rotate
 	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed) or \
@@ -375,10 +406,38 @@ func _calculate_hover_anchor() -> Vector2i:
 func _handle_drop() -> void:
 	_clear_cell_highlights()
 	
+	# Reset shop label visual overrides
+	var shop_lbl: Label = $MainLayout/ShopArea/Label
+	shop_lbl.text = "Black Market Shop"
+	shop_lbl.remove_theme_color_override("font_color")
+
 	var grid = InventoryManager.BackpackGrid
 	var im = InventoryManager
-	var anchor = _calculate_hover_anchor()
 	
+	# 1. Check if dropped on ShopArea to sell
+	var shop_rect: Rect2 = $MainLayout/ShopArea.get_global_rect()
+	var is_over_shop: bool = shop_rect.has_point(get_global_mouse_position())
+	if is_over_shop:
+		if drag_start_from_grid:
+			im.SellPlacedItem(dragging_item.instance_id)
+		else:
+			im.SellStashedItem(drag_original_stash_index)
+		dragging_item.queue_free()
+		dragging_item = null
+		_refresh_shop()
+		return
+
+	# 2. Check if dropped on StashArea to unequip
+	var stash_rect: Rect2 = $MainLayout/HBox/StashArea.get_global_rect()
+	var is_over_stash: bool = stash_rect.has_point(get_global_mouse_position())
+	if is_over_stash and drag_start_from_grid:
+		im.TryTakeItemToStash(dragging_item.instance_id)
+		dragging_item.queue_free()
+		dragging_item = null
+		_refresh_shop()
+		return
+
+	var anchor = _calculate_hover_anchor()
 	var placed_successfully = false
 
 	if grid.CanPlaceItem(dragging_item.item_ref, anchor, dragging_item.rotation_steps):
