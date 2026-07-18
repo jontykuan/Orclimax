@@ -89,6 +89,7 @@ namespace Orclimax.Autoload
         public void AdvanceStage()
         {
             CurrentStage++;
+            Gold += 10; // Award 10 gold for clearing the stage
             CurrentState = GameState.Shop;
         }
 

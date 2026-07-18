@@ -283,9 +283,12 @@ func _on_stash_updated() -> void:
 
 func _generate_new_shop_items() -> void:
 	current_shop_items.clear()
+	var temp_pool = test_items.duplicate()
 	for i in range(3):
-		if test_items.size() > 0:
-			current_shop_items.append(test_items[randi() % test_items.size()])
+		if temp_pool.size() > 0:
+			var idx = randi() % temp_pool.size()
+			current_shop_items.append(temp_pool[idx])
+			temp_pool.remove_at(idx)
 
 func _on_reroll_pressed() -> void:
 	if GameManager.Gold >= 2:
