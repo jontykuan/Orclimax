@@ -17,7 +17,7 @@ func _ready() -> void:
 	# 1. Instantiate Player
 	player_node = PlayerScene.instantiate() as Player
 	add_child(player_node)
-	player_node.position = Vector2(576, 450) # Center bottom
+	player_node.position = Vector2(576, 1050) # Center bottom
 
 	# 2. Instantiate HUD
 	hud_node = HUDScene.instantiate() as HUD
@@ -45,7 +45,7 @@ func _on_spawn_timer_timeout() -> void:
 	
 	var enemy = EnemyScene.instantiate() as EnemyBase
 	add_child(enemy)
-	enemy.position = Vector2(spawn_x, 450) # same level
+	enemy.position = Vector2(spawn_x, 1050) # same level
 
 func _complete_wave() -> void:
 	wave_active = false

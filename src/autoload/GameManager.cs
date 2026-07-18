@@ -97,5 +97,44 @@ namespace Orclimax.Autoload
         {
             CurrentState = GameState.GameOver;
         }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+            {
+                if (keyEvent.Keycode == Key.F1)
+                {
+                    DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+                    DisplayServer.WindowSetSize(new Vector2I(800, 600));
+                    CenterWindow();
+                }
+                else if (keyEvent.Keycode == Key.F2)
+                {
+                    DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+                    DisplayServer.WindowSetSize(new Vector2I(1600, 1200));
+                    CenterWindow();
+                }
+                else if (keyEvent.Keycode == Key.F3 || keyEvent.Keycode == Key.F11)
+                {
+                    if (DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Fullscreen)
+                    {
+                        DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+                        DisplayServer.WindowSetSize(new Vector2I(1600, 1200));
+                        CenterWindow();
+                    }
+                    else
+                    {
+                        DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+                    }
+                }
+            }
+        }
+
+        private void CenterWindow()
+        {
+            var screenSize = DisplayServer.ScreenGetSize();
+            var windowSize = DisplayServer.WindowGetSize();
+            DisplayServer.WindowSetPosition((screenSize - windowSize) / 2);
+        }
     }
 }

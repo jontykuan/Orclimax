@@ -9,7 +9,7 @@ size = Vector2(4000, 40)
 script = ExtResource("1_lvl")
 
 [node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2(576, 500)
+position = Vector2(576, 1100)
 collision_layer = 4
 collision_mask = 3
 
