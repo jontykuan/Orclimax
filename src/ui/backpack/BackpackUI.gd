@@ -294,10 +294,11 @@ func _rebuild_grid() -> void:
 	_rebuild_placed_items()
 
 func _rebuild_placed_items() -> void:
-	# Clear old items
-	for item_node in item_nodes.values():
-		if is_instance_valid(item_node):
-			item_node.queue_free()
+	# Clear old item UI nodes under grid_container
+	for child in grid_container.get_children():
+		if child is ItemUI:
+			if is_instance_valid(child):
+				child.queue_free()
 	item_nodes.clear()
 
 	var grid = InventoryManager.BackpackGrid
