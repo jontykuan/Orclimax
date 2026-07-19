@@ -512,7 +512,8 @@ func _handle_drop() -> void:
 			im.SellPlacedItem(dragging_item.instance_id)
 		else:
 			im.SellStashedItem(drag_original_stash_index)
-		dragging_item.queue_free()
+		if is_instance_valid(dragging_item):
+			dragging_item.queue_free()
 		dragging_item = null
 		_refresh_shop()
 		return
@@ -522,7 +523,8 @@ func _handle_drop() -> void:
 	var is_over_stash: bool = stash_rect.has_point(get_global_mouse_position())
 	if is_over_stash and drag_start_from_grid:
 		im.TryTakeItemToStash(dragging_item.instance_id)
-		dragging_item.queue_free()
+		if is_instance_valid(dragging_item):
+			dragging_item.queue_free()
 		dragging_item = null
 		_refresh_shop()
 		return
@@ -549,7 +551,8 @@ func _handle_drop() -> void:
 			# Just put back in stash
 			im.emit_signal("StashUpdated")
 			
-	dragging_item.queue_free()
+	if is_instance_valid(dragging_item):
+		dragging_item.queue_free()
 	dragging_item = null
 	_refresh_shop()
 
