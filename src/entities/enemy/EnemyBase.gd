@@ -8,7 +8,7 @@ class EnemyAction:
 	var cooldown: float
 	var timer: float
 	var damage: float
-	var range: float
+	var action_range: float
 	var description: String
 
 	func _init(p_name: String, p_cooldown: float, p_damage: float, p_range: float, p_desc: String) -> void:
@@ -16,7 +16,7 @@ class EnemyAction:
 		cooldown = p_cooldown
 		timer = 0.0
 		damage = p_damage
-		range = p_range
+		action_range = p_range
 		description = p_desc
 
 @export var max_hp: float = 30.0
@@ -66,7 +66,7 @@ func _physics_process(delta: float) -> void:
 	var current_action = actions[current_action_idx]
 	var is_attacking = false
 
-	if dist <= current_action.range:
+	if dist <= current_action.action_range:
 		is_attacking = true
 		if current_action.timer >= current_action.cooldown:
 			_execute_enemy_action(current_action)

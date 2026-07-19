@@ -48,8 +48,8 @@ func _on_pleasure_changed(current: float, max_val: float) -> void:
 
 func _update_pip_expression(ratio: float) -> void:
 	var name_str = "None"
-	if InventoryManager.CurrentFemale != null:
-		name_str = InventoryManager.CurrentFemale.CharacterName
+	if InventoryManager.CurrentVessel != null:
+		name_str = InventoryManager.CurrentVessel.CharacterName
 	
 	status_lbl.text = "Mounted: " + name_str
 	
