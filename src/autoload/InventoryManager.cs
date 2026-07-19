@@ -178,6 +178,20 @@ namespace Orclimax.Autoload
             EmitSignal(SignalName.StashUpdated);
         }
 
+        public void AddItemToStashDirectly(ItemData item)
+        {
+            if (item == null) return;
+            Stash.Add(item);
+            EmitSignal(SignalName.StashUpdated);
+        }
+
+        public void SellItemDirectly(ItemData item)
+        {
+            if (item == null) return;
+            int sellPrice = Math.Max(1, item.BasePrice / 2);
+            GameManager.Instance.AddGold(sellPrice);
+        }
+
         public void SellPlacedItem(string instanceId)
         {
             if (BackpackGrid.PlacedItems.TryGetValue(instanceId, out GridItemInstance instance))

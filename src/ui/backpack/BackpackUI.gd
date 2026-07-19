@@ -567,7 +567,7 @@ func _handle_drop() -> void:
 	var is_over_shop: bool = shop_rect.has_point(get_global_mouse_position())
 	if is_over_shop:
 		if drag_start_from_grid:
-			im.SellPlacedItem(dragging_item.instance_id)
+			im.SellItemDirectly(dragging_item.item_ref)
 		else:
 			im.SellStashedItem(drag_original_stash_index)
 		if is_instance_valid(dragging_item):
@@ -580,7 +580,7 @@ func _handle_drop() -> void:
 	var stash_rect: Rect2 = $MainLayout/HBox/StashArea.get_global_rect()
 	var is_over_stash: bool = stash_rect.has_point(get_global_mouse_position())
 	if is_over_stash and drag_start_from_grid:
-		im.TryTakeItemToStash(dragging_item.instance_id)
+		im.AddItemToStashDirectly(dragging_item.item_ref)
 		if is_instance_valid(dragging_item):
 			dragging_item.queue_free()
 		dragging_item = null
