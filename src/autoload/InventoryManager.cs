@@ -49,23 +49,46 @@ namespace Orclimax.Autoload
             // ...
         }
 
-        public void SetVessel(VesselData vessel)
+        public void SetVessel(VesselData vessel, bool keepEquipped = false)
         {
             if (vessel == null) return;
 
-            // 1. Return all currently placed items to stash so player doesn't lose them
+            // 1. Gather all currently placed items
+            var oldPlaced = new List<GridItemInstance>();
             if (CurrentVessel != null)
             {
-                var instances = BackpackGrid.PlacedItems.Values.ToList();
-                foreach (var inst in instances)
-                {
-                    Stash.Add(inst.Item);
-                    BackpackGrid.RemoveItem(inst.InstanceId);
-                }
+                oldPlaced = BackpackGrid.PlacedItems.Values.ToList();
             }
 
+            // 2. Clear old grid cells/items
+            BackpackGrid.ClearGrid();
+
+            // 3. Set the new Vessel and initialize grid layout
             CurrentVessel = vessel;
             CurrentVessel.InitializeGrid(BackpackGrid);
+
+            // 4. Try to re-place or return items to stash
+            if (keepEquipped)
+            {
+                foreach (var inst in oldPlaced)
+                {
+                    if (BackpackGrid.CanPlaceItem(inst.Item, inst.AnchorCoords, inst.RotationSteps))
+                    {
+                        BackpackGrid.PlaceItem(inst.Item, inst.AnchorCoords, inst.RotationSteps, inst.InstanceId);
+                    }
+                    else
+                    {
+                        Stash.Add(inst.Item);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var inst in oldPlaced)
+                {
+                    Stash.Add(inst.Item);
+                }
+            }
 
             EmitSignal(SignalName.VesselChanged, CurrentVessel);
             EmitSignal(SignalName.GridUpdated);
