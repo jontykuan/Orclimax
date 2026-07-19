@@ -4,7 +4,7 @@ class_name EnemyBase
 
 @export var max_hp: float = 30.0
 @export var speed: float = 80.0
-@export var damage: float = 5.0
+@export var damage: float = 2.0
 @export var gold_reward: int = 2
 @export var drop_chance: float = 0.25 # 25% chance to drop item on death
 

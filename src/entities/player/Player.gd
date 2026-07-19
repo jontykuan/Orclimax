@@ -5,7 +5,7 @@ class_name Player
 const ProjectileScene = preload("res://src/entities/weapons/Projectile.tscn")
 
 @export var gravity: float = 980.0
-@export var jump_velocity: float = -400.0
+@export var jump_velocity: float = -550.0
 
 @onready var orc_sprite: ColorRect = $CompositeVisuals/Orc
 @onready var female_sprite: ColorRect = $CompositeVisuals/Female

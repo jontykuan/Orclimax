@@ -93,7 +93,7 @@ func _setup_test_items() -> void:
 	sword.RequiredZone = 0 # General
 	sword.ShapeOffsets = [Vector2i(0, 0), Vector2i(1, 0)] # 2x1 horizontal
 	sword.Damage = 8.0
-	sword.Cooldown = 1.8
+	sword.Cooldown = 1.4
 	sword.BasePrice = 8
 	test_items.append(sword)
 
@@ -137,7 +137,7 @@ func _setup_test_items() -> void:
 	poison_sword.RequiredZone = 0 # General
 	poison_sword.ShapeOffsets = [Vector2i(0, 0), Vector2i(1, 0)]
 	poison_sword.Damage = 14.0
-	poison_sword.Cooldown = 1.5
+	poison_sword.Cooldown = 1.1
 	poison_sword.BasePrice = 15
 	poison_sword.SynergyDescription = "Deals poison damage."
 
@@ -155,7 +155,7 @@ func _setup_test_items() -> void:
 	vibrating_sword.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1)] # 1x2 vertical
 	vibrating_sword.Damage = 12.0
 	vibrating_sword.PleasureGain = 1.5
-	vibrating_sword.Cooldown = 1.4
+	vibrating_sword.Cooldown = 1.0
 	vibrating_sword.BasePrice = 18
 	vibrating_sword.SynergyDescription = "Deals damage and increases pleasure simultaneously."
 

@@ -54,7 +54,7 @@ namespace Orclimax.Autoload
             // 2. Fetch base stats
             float baseMaxHp = 100f;
             float baseMoveSpeed = 250f;
-            float baseAttackSpeed = 1.0f;
+            float baseAttackSpeed = 1.5f;
             float baseArmor = 0f;
             float basePleasureRate = 1.0f;
 
