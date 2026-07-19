@@ -208,7 +208,8 @@ func _on_vessel_changed(vessel: Resource) -> void:
 func _rebuild_grid() -> void:
 	# Clear old nodes
 	for cell_node in cell_nodes.values():
-		cell_node.queue_free()
+		if is_instance_valid(cell_node):
+			cell_node.queue_free()
 	cell_nodes.clear()
 
 	var grid = InventoryManager.BackpackGrid
@@ -254,7 +255,8 @@ func _rebuild_grid() -> void:
 func _rebuild_placed_items() -> void:
 	# Clear old items
 	for item_node in item_nodes.values():
-		item_node.queue_free()
+		if is_instance_valid(item_node):
+			item_node.queue_free()
 	item_nodes.clear()
 
 	var grid = InventoryManager.BackpackGrid
@@ -284,7 +286,8 @@ func _on_grid_updated() -> void:
 func _on_stash_updated() -> void:
 	# Rebuild stash items list
 	for child in stash_container.get_children():
-		child.queue_free()
+		if is_instance_valid(child):
+			child.queue_free()
 		
 	var stash = InventoryManager.Stash
 	for i in range(stash.size()):
@@ -325,7 +328,8 @@ func _on_reroll_pressed() -> void:
 
 func _refresh_shop() -> void:
 	for child in shop_container.get_children():
-		child.queue_free()
+		if is_instance_valid(child):
+			child.queue_free()
 
 	# Update Reroll button disabled state
 	if reroll_button:
