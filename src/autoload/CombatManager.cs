@@ -104,6 +104,45 @@ namespace Orclimax.Autoload
             EmitSignal(SignalName.PleasureChanged, CurrentPleasure, MaxPleasure);
         }
 
+        public Godot.Collections.Dictionary GetCurrentStats()
+        {
+            float baseMaxHp = 100f;
+            float baseMoveSpeed = 250f;
+            float baseAttackSpeed = 1.5f;
+            float baseArmor = 0f;
+            float basePleasureRate = 1.0f;
+            float maxPleasure = 100f;
+
+            if (InventoryManager.Instance.CurrentVessel != null)
+            {
+                maxPleasure = InventoryManager.Instance.CurrentVessel.BaseMaxPleasure;
+                basePleasureRate = InventoryManager.Instance.CurrentVessel.PleasureBuildRateMultiplier;
+            }
+
+            var placedItems = InventoryManager.Instance.BackpackGrid.PlacedItems.Values;
+            foreach (var inst in placedItems)
+            {
+                ItemData item = inst.Item;
+                float ratio = inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid);
+                
+                baseMaxHp += item.ArmorBonus * ratio * 5f;
+                baseMoveSpeed += item.SpeedBonus * ratio;
+                baseAttackSpeed += item.AttackSpeedBonus * ratio;
+                baseArmor += item.ArmorBonus * ratio;
+                basePleasureRate += item.PleasureGain * ratio;
+            }
+
+            return new Godot.Collections.Dictionary
+            {
+                { "MaxHp", baseMaxHp },
+                { "MoveSpeed", baseMoveSpeed },
+                { "AttackSpeed", baseAttackSpeed },
+                { "Armor", baseArmor },
+                { "PleasureRate", basePleasureRate },
+                { "MaxPleasure", maxPleasure }
+            };
+        }
+
         public override void _Process(double delta)
         {
             if (GameManager.Instance.CurrentState != GameState.Combat) return;

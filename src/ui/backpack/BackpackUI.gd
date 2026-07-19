@@ -15,6 +15,15 @@ const ItemUIScene = preload("res://src/ui/backpack/ItemUI.tscn")
 @onready var vessel_option: OptionButton = $MainLayout/VesselSelection/VesselOption
 @onready var keep_equip_checkbox: CheckBox = $MainLayout/VesselSelection/KeepEquipCheckBox
 
+@onready var hp_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/HPLabel
+@onready var armor_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/ArmorLabel
+@onready var speed_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/SpeedLabel
+@onready var atk_spd_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/AtkSpdLabel
+@onready var pleasure_rate_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/PleasureRateLabel
+@onready var max_pleasure_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/MaxPleasureLabel
+@onready var desc_title: Label = $MainLayout/HBox/StatsArea/DescPanel/Margin/VBox/DescTitle
+@onready var desc_text: RichTextLabel = $MainLayout/HBox/StatsArea/DescPanel/Margin/VBox/DescText
+
 var cell_size: float = 64.0
 var cell_nodes: Dictionary = {} # Vector2i -> GridCellUI
 var item_nodes: Dictionary = {} # String (instance_id) -> ItemUI
@@ -333,7 +342,11 @@ func _rebuild_placed_items() -> void:
 		# Position matches anchor cell
 		item_ui.position = Vector2((inst.AnchorCoords.x - min_x) * cell_size, (inst.AnchorCoords.y - min_y) * cell_size)
 		item_ui.drag_started.connect(_on_item_drag_started)
+		item_ui.hovered.connect(_on_item_hovered)
+		item_ui.unhovered.connect(_on_item_unhovered)
 		item_nodes[inst_id] = item_ui
+
+	_update_orc_stats()
 
 func _on_grid_updated() -> void:
 	_rebuild_placed_items()
@@ -351,6 +364,8 @@ func _on_stash_updated() -> void:
 		stash_container.add_child(item_ui)
 		item_ui.setup(item, "", i, 0, cell_size)
 		item_ui.drag_started.connect(_on_item_drag_started)
+		item_ui.hovered.connect(_on_item_hovered)
+		item_ui.unhovered.connect(_on_item_unhovered)
 
 func _generate_new_shop_items() -> void:
 	if current_shop_items.size() < 3:
@@ -422,6 +437,10 @@ func _refresh_shop() -> void:
 			shop_item_panel.self_modulate = Color(1.0, 0.85, 0.3) # Gold tint for locked slot
 		else:
 			shop_item_panel.self_modulate = Color(1.0, 1.0, 1.0) # Normal tint
+
+		# Connect hover signals for the shop item
+		shop_item_panel.mouse_entered.connect(func(): _on_item_hovered(item))
+		shop_item_panel.mouse_exited.connect(func(): _on_item_unhovered())
 
 		var vbox = VBoxContainer.new()
 		vbox.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -622,3 +641,77 @@ func _on_start_combat_pressed() -> void:
 	
 	# For prototype, we will load the combat scene
 	get_tree().change_scene_to_file("res://src/entities/player/Level.tscn")
+
+func _update_orc_stats() -> void:
+	var stats = CombatManager.GetCurrentStats()
+	hp_label.text = "Max HP: %d" % stats["MaxHp"]
+	armor_label.text = "Armor: %d" % stats["Armor"]
+	speed_label.text = "Move Speed: %d" % stats["MoveSpeed"]
+	atk_spd_label.text = "Attack Speed: %.2fx" % stats["AttackSpeed"]
+	pleasure_rate_label.text = "Pleasure Gain: %.2fx" % stats["PleasureRate"]
+	max_pleasure_label.text = "Max Pleasure: %d" % stats["MaxPleasure"]
+
+func _on_item_hovered(item: Resource) -> void:
+	if item == null: return
+	desc_title.text = item.ItemName
+	
+	# Determine category string
+	var cat_str = "Unknown"
+	match int(item.Category):
+		0: cat_str = "[color=#ff5555]Weapon (武器)[/color]"
+		1: cat_str = "[color=#e633cc]Toy (玩具)[/color]"
+		2: cat_str = "[color=#33e680]Clothing (服飾)[/color]"
+		3: cat_str = "[color=#ffd933]Accessory (配件)[/color]"
+		4: cat_str = "[color=#33b3ff]Consumable (消耗品)[/color]"
+		
+	var zone_str = "General"
+	match int(item.RequiredZone):
+		0: zone_str = "General (通用)"
+		1: zone_str = "Head (頭部)"
+		2: zone_str = "Chest (胸部)"
+		3: zone_str = "Groin (陰部/胯下)"
+		4: zone_str = "Limbs (四肢)"
+		5: zone_str = "Inactive (無效/過渡)"
+		
+	var body = ""
+	body += "[color=#aaaaaa]Type:[/color] %s\n" % cat_str
+	body += "[color=#aaaaaa]Required Zone:[/color] %s\n" % zone_str
+	body += "[color=#aaaaaa]Base Price:[/color] [color=#f5c651]%d G[/color]\n\n" % item.BasePrice
+	
+	var stats_added = false
+	if item.Damage > 0:
+		body += "[color=#ff5555]⚔️ Damage:[/color] %.1f\n" % item.Damage
+		stats_added = true
+	if item.Cooldown > 0 and int(item.Category) == 0:
+		body += "[color=#ff5555]⏱️ Cooldown:[/color] %.2fs\n" % item.Cooldown
+		stats_added = true
+	if item.ArmorBonus > 0:
+		body += "[color=#33b3ff]🛡️ Armor:[/color] +%.1f\n" % item.ArmorBonus
+		stats_added = true
+	if item.SpeedBonus > 0:
+		body += "[color=#ff9933]👟 Speed:[/color] +%.1f\n" % item.SpeedBonus
+		stats_added = true
+	if item.AttackSpeedBonus > 0:
+		body += "[color=#ffd933]⚡ Atk Speed:[/color] +%.1f%%\n" % (item.AttackSpeedBonus * 100.0)
+		stats_added = true
+	if item.PleasureGain > 0:
+		body += "[color=#e633cc]💖 Pleasure Rate:[/color] +%.2f/s\n" % item.PleasureGain
+		stats_added = true
+		
+	if stats_added:
+		body += "\n"
+		
+	if item.SynergyDescription != "":
+		body += "[color=#80ffdf]Effect:[/color]\n%s" % item.SynergyDescription
+	else:
+		body += "[color=#aaaaaa]No additional effect description.[/color]"
+		
+	desc_text.text = body
+
+func _on_item_hovered_csharp(item_data: Resource) -> void:
+	_on_item_hovered(item_data)
+
+func _on_item_unhovered() -> void:
+	desc_title.text = "Item Details"
+	desc_text.text = "[center][color=#888899]Hover an item to view description[/color][/center]"
+

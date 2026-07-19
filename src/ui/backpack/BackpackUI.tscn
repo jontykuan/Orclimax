@@ -87,6 +87,98 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
+[node name="StatsArea" type="VBoxContainer" parent="MainLayout/HBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.6
+theme_override_constants/separation = 10
+
+[node name="StatsTitle" type="Label" parent="MainLayout/HBox/StatsArea"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "Orc Stats (歐克屬性)"
+
+[node name="StatsPanel" type="PanelContainer" parent="MainLayout/HBox/StatsArea"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="MainLayout/HBox/StatsArea/StatsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBox" type="VBoxContainer" parent="MainLayout/HBox/StatsArea/StatsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HPLabel" type="Label" parent="MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 14
+text = "Max HP: 100"
+
+[node name="ArmorLabel" type="Label" parent="MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Armor: 0"
+
+[node name="SpeedLabel" type="Label" parent="MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.2, 1)
+theme_override_font_sizes/font_size = 14
+text = "Move Speed: 250"
+
+[node name="AtkSpdLabel" type="Label" parent="MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 14
+text = "Attack Speed: 1.5x"
+
+[node name="PleasureRateLabel" type="Label" parent="MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Pleasure Gain: 1.0x"
+
+[node name="MaxPleasureLabel" type="Label" parent="MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.5, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Max Pleasure: 100"
+
+[node name="DescPanel" type="PanelContainer" parent="MainLayout/HBox/StatsArea"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Margin" type="MarginContainer" parent="MainLayout/HBox/StatsArea/DescPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBox" type="VBoxContainer" parent="MainLayout/HBox/StatsArea/DescPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DescTitle" type="Label" parent="MainLayout/HBox/StatsArea/DescPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 16
+text = "Item Details"
+
+[node name="DescText" type="RichTextLabel" parent="MainLayout/HBox/StatsArea/DescPanel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.8, 0.8, 0.85, 1)
+theme_override_font_sizes/normal_font_size = 13
+bbcode_enabled = true
+text = "[center]Hover an item to view description[/center]"
+
 [node name="GridArea" type="VBoxContainer" parent="MainLayout/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3

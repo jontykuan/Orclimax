@@ -3,6 +3,19 @@ extends Control
 class_name ItemUI
 
 signal drag_started(item_ui)
+signal hovered(item_data)
+signal unhovered()
+
+func _ready() -> void:
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
+
+func _on_mouse_entered() -> void:
+	if item_ref:
+		hovered.emit(item_ref)
+
+func _on_mouse_exited() -> void:
+	unhovered.emit()
 
 var item_ref: Resource # C# ItemData
 var instance_id: String = "" # Empty if in stash
