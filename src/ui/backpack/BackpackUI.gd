@@ -11,7 +11,6 @@ const ItemUIScene = preload("res://src/ui/backpack/ItemUI.tscn")
 @onready var gold_label: Label = $MainLayout/Header/GoldLabel
 @onready var stage_label: Label = $MainLayout/Header/StageLabel
 @onready var female_title_label: Label = $MainLayout/HBox/GridArea/FemaleTitle
-@onready var fusion_button: Button = $MainLayout/Header/FusionButton
 @onready var reroll_button: Button = $MainLayout/ShopArea/ShopHeader/RerollButton
 
 var cell_size: float = 64.0
@@ -556,10 +555,6 @@ func _handle_drop() -> void:
 	dragging_item = null
 	_refresh_shop()
 
-func _on_fusion_button_pressed() -> void:
-	# Manually trigger fusions for testing
-	if InventoryManager.TriggerFusions():
-		_refresh_shop()
 
 func _on_start_combat_pressed() -> void:
 	# Transition to Combat scene

@@ -56,10 +56,6 @@ text = "GOLD: 15"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FusionButton" type="Button" parent="MainLayout/Header"]
-layout_mode = 2
-custom_minimum_size = Vector2(160, 40)
-text = "Fuse Items"
 
 [node name="StartCombatButton" type="Button" parent="MainLayout/Header"]
 layout_mode = 2
@@ -149,10 +145,9 @@ layout_mode = 2
 theme_override_colors/default_color = Color(0.7, 0.7, 0.8, 1)
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center]💡 [color=#f5c651]Fusion Guide[/color]: Place compatible items adjacently on the grid and click [color=#e2487e]Fuse Items[/color] to combine them! (e.g. Rusty Sword + Poison Potion = Poison Sword, Rusty Sword + Vibrator = Vibrating Sword)
+text = "[center]💡 [color=#f5c651]Fusion Guide[/color]: Place compatible items adjacently on the grid; they will automatically combine after you pass a combat stage! (e.g. Rusty Sword + Poison Potion = Poison Sword, Rusty Sword + Vibrator = Vibrating Sword)
 Drag items to the [color=#f5c651]Shop[/color] to sell them for 50% gold, or drag to the [color=#4ade80]Stash[/color] to unequip.
 🖥️ [color=#4ade80]Screen Size[/color]: Press [color=#f5c651]F1[/color] (Small 800x600), [color=#f5c651]F2[/color] (Large 1600x1200), or [color=#f5c651]F3/F11[/color] (Fullscreen) to toggle window sizes.[/center]"
 fit_content = true
 
-[connection signal="pressed" from="MainLayout/Header/FusionButton" to="." method="_on_fusion_button_pressed"]
 [connection signal="pressed" from="MainLayout/Header/StartCombatButton" to="." method="_on_start_combat_pressed"]
