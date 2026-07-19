@@ -30,11 +30,11 @@ offset_right = 16.0
 offset_bottom = 0.0
 color = Color(0.2, 0.5, 0.2, 1)
 
-[node name="Female" type="ColorRect" parent="CompositeVisuals"]
+[node name="Vessel" type="ColorRect" parent="CompositeVisuals"]
 offset_left = 12.0
-offset_top = -52.0
-offset_right = 36.0
-offset_bottom = -4.0
+offset_top = -48.0
+offset_right = 30.0
+offset_bottom = -10.0
 color = Color(0.9, 0.4, 0.6, 1)
 
 [node name="HeartParticles" type="CPUParticles2D" parent="CompositeVisuals"]

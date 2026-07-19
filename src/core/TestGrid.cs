@@ -39,8 +39,8 @@ namespace Orclimax.Core
             // 1x1 item
             gag.ShapeOffsets = new Godot.Collections.Array<Vector2I> { new Vector2I(0, 0) }; 
 
-            // 2. Create FemaleData
-            FemaleData girl = new FemaleData();
+            // 2. Create VesselData
+            VesselData girl = new VesselData();
             girl.CharacterName = "Test Girl";
             girl.HeadCells = new Godot.Collections.Array<Vector2I> { new Vector2I(0, 0) };
             girl.GroinCells = new Godot.Collections.Array<Vector2I> { new Vector2I(2, 2), new Vector2I(2, 3) };

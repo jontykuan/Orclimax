@@ -10,11 +10,11 @@ namespace Orclimax.Autoload
     {
         public static InventoryManager Instance { get; private set; }
 
-        [Signal] public delegate void FemaleChangedEventHandler(FemaleData female);
+        [Signal] public delegate void VesselChangedEventHandler(VesselData vessel);
         [Signal] public delegate void GridUpdatedEventHandler();
         [Signal] public delegate void StashUpdatedEventHandler();
 
-        public FemaleData CurrentFemale { get; private set; }
+        public VesselData CurrentVessel { get; private set; }
         public GridData BackpackGrid { get; private set; } = new GridData();
         public Godot.Collections.Array<ItemData> Stash { get; private set; } = new Godot.Collections.Array<ItemData>();
         
@@ -49,12 +49,12 @@ namespace Orclimax.Autoload
             // ...
         }
 
-        public void SetFemale(FemaleData female)
+        public void SetVessel(VesselData vessel)
         {
-            if (female == null) return;
+            if (vessel == null) return;
 
             // 1. Return all currently placed items to stash so player doesn't lose them
-            if (CurrentFemale != null)
+            if (CurrentVessel != null)
             {
                 var instances = BackpackGrid.PlacedItems.Values.ToList();
                 foreach (var inst in instances)
@@ -64,10 +64,10 @@ namespace Orclimax.Autoload
                 }
             }
 
-            CurrentFemale = female;
-            CurrentFemale.InitializeGrid(BackpackGrid);
+            CurrentVessel = vessel;
+            CurrentVessel.InitializeGrid(BackpackGrid);
 
-            EmitSignal(SignalName.FemaleChanged, CurrentFemale);
+            EmitSignal(SignalName.VesselChanged, CurrentVessel);
             EmitSignal(SignalName.GridUpdated);
             EmitSignal(SignalName.StashUpdated);
         }

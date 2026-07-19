@@ -8,7 +8,7 @@ const ProjectileScene = preload("res://src/entities/weapons/Projectile.tscn")
 @export var jump_velocity: float = -550.0
 
 @onready var orc_sprite: ColorRect = $CompositeVisuals/Orc
-@onready var female_sprite: ColorRect = $CompositeVisuals/Female
+@onready var vessel_sprite: ColorRect = $CompositeVisuals/Vessel
 @onready var particles: CPUParticles2D = $CompositeVisuals/HeartParticles
 @onready var camera: Camera2D = $Camera2D
 
@@ -151,7 +151,7 @@ func _update_visuals_and_animations() -> void:
 	
 	# Horizontal relative movement between female and orc (sex action)
 	# The female slides back and forth on the Orc's genital height
-	female_sprite.position.x = 12.0 + sin(time_tick * speed_freq) * (5.0 + ratio * 10.0)
+	vessel_sprite.position.x = 12.0 + sin(time_tick * speed_freq) * (5.0 + ratio * 10.0)
 	
 	# Small vertical bounce for both (running/thrusting sync)
 	# Scale down the bounce amplitude if crouching

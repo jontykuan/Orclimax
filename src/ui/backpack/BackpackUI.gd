@@ -10,7 +10,7 @@ const ItemUIScene = preload("res://src/ui/backpack/ItemUI.tscn")
 @onready var shop_container: HBoxContainer = $MainLayout/ShopArea/ShopItems
 @onready var gold_label: Label = $MainLayout/Header/GoldLabel
 @onready var stage_label: Label = $MainLayout/Header/StageLabel
-@onready var female_title_label: Label = $MainLayout/HBox/GridArea/FemaleTitle
+@onready var female_title_label: Label = $MainLayout/HBox/GridArea/VesselTitle
 @onready var reroll_button: Button = $MainLayout/ShopArea/ShopHeader/RerollButton
 
 var cell_size: float = 64.0
@@ -46,15 +46,15 @@ func _ready() -> void:
 	gm.connect("GoldChanged", _on_gold_changed)
 	gm.connect("StageChanged", _on_stage_changed)
 	
-	im.connect("FemaleChanged", _on_female_changed)
+	im.connect("VesselChanged", _on_vessel_changed)
 	im.connect("GridUpdated", _on_grid_updated)
 	im.connect("StashUpdated", _on_stash_updated)
 
 	# 2. Setup mock test items
 	_setup_test_items()
 
-	# 3. Initialize default female (if none is set, create a mockup girl)
-	_setup_mock_female_if_needed()
+	# 3. Initialize default vessel (if none is set, create a mockup girl)
+	_setup_mock_vessel_if_needed()
 
 	# 4. Initial UI draws
 	# Connect reroll button
@@ -69,7 +69,7 @@ func _ready() -> void:
 
 	_on_gold_changed(gm.Gold)
 	_on_stage_changed(gm.CurrentStage)
-	_on_female_changed(im.CurrentFemale)
+	_on_vessel_changed(im.CurrentVessel)
 	_on_stash_updated() # Force initial stash draw so dropped items show up!
 
 func _setup_test_items() -> void:
@@ -168,10 +168,10 @@ func _setup_test_items() -> void:
 		InventoryManager.Recipes.append(recipe)
 		InventoryManager.Recipes.append(recipe2)
 
-func _setup_mock_female_if_needed() -> void:
+func _setup_mock_vessel_if_needed() -> void:
 	var im = InventoryManager
-	if im.CurrentFemale == null:
-		var girl = load("res://src/core/FemaleData.cs").new()
+	if im.CurrentVessel == null:
+		var girl = load("res://src/core/VesselData.cs").new()
 		girl.Id = "girl_lydia"
 		girl.CharacterName = "Elven Mage Lydia"
 		
@@ -190,7 +190,7 @@ func _setup_mock_female_if_needed() -> void:
 		# (2, 4) groin cell and (3, 5) limb cell start out locked!
 		girl.InitiallyLockedCells = [Vector2i(2, 4), Vector2i(3, 5)]
 
-		im.SetFemale(girl)
+		im.SetVessel(girl)
 
 func _on_gold_changed(new_gold: int) -> void:
 	gold_label.text = "GOLD: %d" % new_gold
@@ -200,9 +200,9 @@ func _on_gold_changed(new_gold: int) -> void:
 func _on_stage_changed(new_stage: int) -> void:
 	stage_label.text = "STAGE: %d" % new_stage
 
-func _on_female_changed(female: Resource) -> void:
-	if female == null: return
-	female_title_label.text = "Carrier: " + female.CharacterName
+func _on_vessel_changed(vessel: Resource) -> void:
+	if vessel == null: return
+	female_title_label.text = "Vessel: " + vessel.CharacterName
 	_rebuild_grid()
 
 func _rebuild_grid() -> void:

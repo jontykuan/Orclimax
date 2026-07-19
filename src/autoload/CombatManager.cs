@@ -58,10 +58,10 @@ namespace Orclimax.Autoload
             float baseArmor = 0f;
             float basePleasureRate = 1.0f;
 
-            if (InventoryManager.Instance.CurrentFemale != null)
+            if (InventoryManager.Instance.CurrentVessel != null)
             {
-                MaxPleasure = InventoryManager.Instance.CurrentFemale.BaseMaxPleasure;
-                basePleasureRate = InventoryManager.Instance.CurrentFemale.PleasureBuildRateMultiplier;
+                MaxPleasure = InventoryManager.Instance.CurrentVessel.BaseMaxPleasure;
+                basePleasureRate = InventoryManager.Instance.CurrentVessel.PleasureBuildRateMultiplier;
             }
             else
             {
@@ -191,10 +191,10 @@ namespace Orclimax.Autoload
 
             string femaleId = "None";
             string skillName = "Magic Spillover";
-            if (InventoryManager.Instance.CurrentFemale != null)
+            if (InventoryManager.Instance.CurrentVessel != null)
             {
-                femaleId = InventoryManager.Instance.CurrentFemale.Id;
-                skillName = InventoryManager.Instance.CurrentFemale.ClimaxSkillName;
+                femaleId = InventoryManager.Instance.CurrentVessel.Id;
+                skillName = InventoryManager.Instance.CurrentVessel.ClimaxSkillName;
             }
 
             EmitSignal(SignalName.ClimaxTriggered, femaleId, skillName);

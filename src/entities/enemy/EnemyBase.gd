@@ -2,20 +2,44 @@ extends CharacterBody2D
 
 class_name EnemyBase
 
+# Helper class for enemy action rotation
+class EnemyAction:
+	var name: String
+	var cooldown: float
+	var timer: float
+	var damage: float
+	var range: float
+	var description: String
+
+	func _init(p_name: String, p_cooldown: float, p_damage: float, p_range: float, p_desc: String) -> void:
+		name = p_name
+		cooldown = p_cooldown
+		timer = 0.0
+		damage = p_damage
+		range = p_range
+		description = p_desc
+
 @export var max_hp: float = 30.0
 @export var speed: float = 80.0
-@export var damage: float = 2.0
 @export var gold_reward: int = 2
 @export var drop_chance: float = 0.25 # 25% chance to drop item on death
 
 var hp: float = 30.0
 var target_player: CharacterBody2D = null
+var actions: Array[EnemyAction] = []
+var current_action_idx: int = 0
 
 @onready var sprite: ColorRect = $ColorRect
 
 func _ready() -> void:
 	hp = max_hp
 	add_to_group("enemies")
+	
+	# Configure multiple actions for rotation mechanism
+	# Action 1: Basic Claw Slash (Quick, low damage)
+	actions.append(EnemyAction.new("Claw Slash", 1.5, 3.0, 110.0, "Quick front slash"))
+	# Action 2: Heavy Cleave (Slow, high damage)
+	actions.append(EnemyAction.new("Heavy Cleave", 4.0, 8.0, 130.0, "Devastating slow cleave"))
 	
 	# Find player
 	var players = get_tree().get_nodes_in_group("player")
@@ -30,9 +54,31 @@ func _physics_process(delta: float) -> void:
 			target_player = players[0]
 		return
 
-	# Simple AI: Walk towards player
+	# Tick cooldown timers of all actions
+	for action in actions:
+		action.timer += delta
+
+	# Check player distance
+	var dist = global_position.distance_to(target_player.global_position)
 	var dir = (target_player.global_position - global_position).normalized()
-	velocity.x = dir.x * speed
+
+	# Check rotation attack status
+	var current_action = actions[current_action_idx]
+	var is_attacking = false
+
+	if dist <= current_action.range:
+		is_attacking = true
+		if current_action.timer >= current_action.cooldown:
+			_execute_enemy_action(current_action)
+			current_action.timer = 0.0
+			current_action_idx = (current_action_idx + 1) % actions.size()
+
+	if is_attacking:
+		# Stop moving horizontally during attack execution
+		velocity.x = 0
+	else:
+		# Walk towards player
+		velocity.x = dir.x * speed
 	
 	# Simple gravity
 	if not is_on_floor():
@@ -42,8 +88,16 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# Damage player on overlap (AABB check since physical collision mask is 4)
-	_check_player_overlap(delta)
+func _execute_enemy_action(action: EnemyAction) -> void:
+	# Deal damage to player via CombatManager
+	CombatManager.TakeDamage(action.damage)
+	
+	# Visual feedback: attack telegraph flash
+	var tween = create_tween()
+	sprite.color = Color(1.0, 1.0, 1.0, 1.0) # Flash white
+	tween.tween_property(sprite, "color", Color(0.8, 0.1, 0.1, 1.0), 0.15) # Back to crimson
+	
+	print("Enemy performed [", action.name, "] dealing ", action.damage, " damage!")
 
 func take_damage(amount: float) -> void:
 	hp -= amount
@@ -66,17 +120,12 @@ func _die() -> void:
 	queue_free()
 
 func _spawn_loot() -> void:
-	# In our prototype, BackpackUI test_items contains all item templates.
-	# We can pick a random item and add it directly to the stash!
-	# To make this clean, we emit a floating text or print message.
 	var backpack_ui = get_tree().get_first_node_in_group("backpack_ui")
 	var item_pool = []
 	if backpack_ui and backpack_ui.has_method("_setup_test_items"):
 		item_pool = backpack_ui.test_items
 	
-	# Fallback if BackpackUI not active (e.g. direct scene run)
 	if item_pool.size() == 0:
-		# Just create a mock sword
 		var sword = load("res://src/core/ItemData.cs").new()
 		sword.Id = "wpn_sword"
 		sword.ItemName = "Dropped Blade"
@@ -91,24 +140,4 @@ func _spawn_loot() -> void:
 	var dropped_item = item_pool[randi() % item_pool.size()]
 	InventoryManager.AddItemToStash(dropped_item)
 
-	# Print floating alert
 	print("Loot Dropped: ", dropped_item.ItemName, " (Sent to Stash!)")
-
-func _check_player_overlap(delta: float) -> void:
-	if not target_player:
-		return
-	
-	# Horizontal check: origins are at bottom center, player half-width 64, enemy half-width 48
-	var dx: float = abs(target_player.global_position.x - global_position.x)
-	var overlap_x: bool = dx < 96.0 # 48 (enemy half-width) + 64 (player half-width) - 16 leeway
-	
-	# Vertical check: origins are at feet (bottom center)
-	# Player height is 256.0 (or 153.6 when crouching), Enemy height is 192.0
-	var dy: float = target_player.global_position.y - global_position.y
-	var player_height: float = 153.6 if target_player.is_crouching else 256.0
-	
-	# Check if vertical intervals [y-height, y] and [y-192, y] overlap
-	var overlap_y: bool = (dy > -player_height and dy < 192.0)
-	
-	if overlap_x and overlap_y:
-		CombatManager.TakeDamage(damage * delta)

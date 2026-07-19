@@ -73,11 +73,11 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.2
 theme_override_constants/separation = 10
 
-[node name="FemaleTitle" type="Label" parent="MainLayout/HBox/GridArea"]
+[node name="VesselTitle" type="Label" parent="MainLayout/HBox/GridArea"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.4, 0.7, 1)
 theme_override_font_sizes/font_size = 18
-text = "Carrier: [Un裝載]"
+text = "Vessel: [Un裝載]"
 
 [node name="Panel" type="Panel" parent="MainLayout/HBox/GridArea"]
 layout_mode = 2
