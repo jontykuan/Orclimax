@@ -98,19 +98,17 @@ func _check_player_overlap(delta: float) -> void:
 	if not target_player:
 		return
 	
-	# Horizontal check: origins are at bottom center, player width ~32, enemy ~24
+	# Horizontal check: origins are at bottom center, player half-width 64, enemy half-width 48
 	var dx: float = abs(target_player.global_position.x - global_position.x)
-	var overlap_x: bool = dx < 24.0 # 12 (enemy half-width) + 16 (player half-width) - 4 leeway
+	var overlap_x: bool = dx < 96.0 # 48 (enemy half-width) + 64 (player half-width) - 16 leeway
 	
 	# Vertical check: origins are at feet (bottom center)
-	# Player is at global_position.y, top is y - height
-	# Enemy is at global_position.y, top is y - 48
-	var dy: float = target_player.global_position.y - global_position.y # negative if player is higher
-	var player_height: float = 38.4 if target_player.orc_sprite.scale.y < 0.8 else 64.0
+	# Player height is 256.0 (or 153.6 when crouching), Enemy height is 192.0
+	var dy: float = target_player.global_position.y - global_position.y
+	var player_height: float = 153.6 if target_player.is_crouching else 256.0
 	
-	# Check if vertical intervals [y-height, y] and [y-48, y] overlap
-	# If player is standing on same level, dy ~ 0, which is between -player_height and 48
-	var overlap_y: bool = (dy > -player_height and dy < 48.0)
+	# Check if vertical intervals [y-height, y] and [y-192, y] overlap
+	var overlap_y: bool = (dy > -player_height and dy < 192.0)
 	
 	if overlap_x and overlap_y:
 		CombatManager.TakeDamage(damage * delta)

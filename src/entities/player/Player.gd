@@ -30,10 +30,11 @@ var DOUBLE_TAP_DELAY: float = 0.25
 # Crouching collision variables
 @export var crouch_speed_multiplier: float = 0.4
 @export var crouch_height_ratio: float = 0.6
+@export var visual_base_scale: float = 4.0
 
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
-var original_collision_height: float = 64.0
-var original_collision_pos_y: float = -32.0
+var original_collision_height: float = 256.0
+var original_collision_pos_y: float = -128.0
 var is_crouching: bool = false
 
 func _ready() -> void:
@@ -47,6 +48,8 @@ func _ready() -> void:
 	
 	# Update local stats initially
 	move_speed = cm.MoveSpeed
+
+	$CompositeVisuals.scale = Vector2(visual_base_scale, visual_base_scale)
 
 	# Store original collision shape metrics
 	if collision_shape and collision_shape.shape is RectangleShape2D:
@@ -90,14 +93,14 @@ func _handle_normal_movement(_delta: float) -> void:
 	
 	if is_crouching:
 		speed_multiplier = crouch_speed_multiplier
-		$CompositeVisuals.scale.y = crouch_height_ratio
+		$CompositeVisuals.scale.y = visual_base_scale * crouch_height_ratio
 		
 		# Shrink collision shape downwards (bottom remains at y=0)
 		if collision_shape and collision_shape.shape is RectangleShape2D:
 			collision_shape.shape.size.y = original_collision_height * crouch_height_ratio
 			collision_shape.position.y = -original_collision_height * crouch_height_ratio / 2.0
 	else:
-		$CompositeVisuals.scale.y = 1.0
+		$CompositeVisuals.scale.y = visual_base_scale
 		
 		# Restore original collision shape size
 		if collision_shape and collision_shape.shape is RectangleShape2D:
@@ -123,10 +126,10 @@ func _handle_normal_movement(_delta: float) -> void:
 	# Update direction facing
 	if dir > 0:
 		facing_direction = Vector2.RIGHT
-		$CompositeVisuals.scale.x = 1
+		$CompositeVisuals.scale.x = visual_base_scale
 	elif dir < 0:
 		facing_direction = Vector2.LEFT
-		$CompositeVisuals.scale.x = -1
+		$CompositeVisuals.scale.x = -visual_base_scale
 
 func _start_dash(dir: Vector2) -> void:
 	is_dashing = true
@@ -152,7 +155,7 @@ func _update_visuals_and_animations() -> void:
 	
 	# Small vertical bounce for both (running/thrusting sync)
 	# Scale down the bounce amplitude if crouching
-	var bounce_amplitude: float = (2.0 + ratio * 4.0) * (crouch_height_ratio if is_crouching else 1.0)
+	var bounce_amplitude: float = (2.0 + ratio * 4.0) * (crouch_height_ratio if is_crouching else 1.0) * visual_base_scale
 	$CompositeVisuals.position.y = sin(time_tick * speed_freq * 2.0) * bounce_amplitude
 
 	# 2. Particles intensity
