@@ -32,5 +32,28 @@ namespace Orclimax.Core
                 yield return AnchorCoords + offset;
             }
         }
+
+        /// <summary>
+        /// Calculates the ratio of occupied cells that are active (not Inactive).
+        /// </summary>
+        public float GetActiveRatio(GridData grid)
+        {
+            int totalCells = 0;
+            int activeCells = 0;
+
+            foreach (var cellCoords in GetAbsoluteOccupiedCells())
+            {
+                totalCells++;
+                if (grid.Cells.TryGetValue(cellCoords, out GridCell cell))
+                {
+                    if (cell.Zone != PlacementZone.Inactive)
+                    {
+                        activeCells++;
+                    }
+                }
+            }
+
+            return totalCells > 0 ? (float)activeCells / totalCells : 1f;
+        }
     }
 }

@@ -75,13 +75,16 @@ namespace Orclimax.Core
                     return false;
                 }
 
-                // 3. Check if cell is occupied by another item
-                if (cell.OccupyingItemInstanceId != null && cell.OccupyingItemInstanceId != ignoreInstanceId)
+                // 3. Check if cell is occupied by another item (exclude Inactive cells from collision checks)
+                if (cell.Zone != PlacementZone.Inactive)
                 {
-                    return false; // Collision
+                    if (cell.OccupyingItemInstanceId != null && cell.OccupyingItemInstanceId != ignoreInstanceId)
+                    {
+                        return false; // Collision
+                    }
                 }
 
-                // 4. Check if we overlap the required zone
+                // 4. Check if we overlap the required zone (only active cells satisfy required zone)
                 if (item.RequiredZone != PlacementZone.General && cell.Zone == item.RequiredZone)
                 {
                     satisfiesZoneRequirement = true;
@@ -102,7 +105,7 @@ namespace Orclimax.Core
 
         public GridItemInstance PlaceItem(ItemData item, Vector2I anchor, int rotationSteps, string instanceId = null)
         {
-            if (!CanPlaceItem(item, anchor, rotationSteps))
+            if (!CanPlaceItem(item, anchor, rotationSteps, instanceId))
             {
                 return null;
             }
@@ -114,7 +117,11 @@ namespace Orclimax.Core
             {
                 if (Cells.TryGetValue(cellCoords, out GridCell cell))
                 {
-                    cell.OccupyingItemInstanceId = instance.InstanceId;
+                    // Only mark occupancy on non-inactive cells
+                    if (cell.Zone != PlacementZone.Inactive)
+                    {
+                        cell.OccupyingItemInstanceId = instance.InstanceId;
+                    }
                 }
             }
 
@@ -135,7 +142,7 @@ namespace Orclimax.Core
             {
                 if (Cells.TryGetValue(cellCoords, out GridCell cell))
                 {
-                    if (cell.OccupyingItemInstanceId == instanceId)
+                    if (cell.Zone != PlacementZone.Inactive && cell.OccupyingItemInstanceId == instanceId)
                     {
                         cell.OccupyingItemInstanceId = null;
                     }

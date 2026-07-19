@@ -34,6 +34,8 @@ func update_visuals() -> void:
 				color_val = Color(1.0, 0.6, 0.2, 0.5)
 			0: # General: neutral
 				color_val = Color(0.3, 0.35, 0.4, 0.4)
+			5: # Inactive: faint grey
+				color_val = Color(0.12, 0.12, 0.16, 0.3)
 				
 	color = color_val
 

@@ -188,6 +188,7 @@ func _setup_vessels() -> void:
 	vessel1.GroinCells = [Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3), Vector2i(2, 4)]
 	vessel1.LimbsCells = [Vector2i(0, 2), Vector2i(4, 2), Vector2i(1, 5), Vector2i(3, 5)]
 	vessel1.GeneralCells = [Vector2i(2, 5)]
+	vessel1.InactiveCells = [Vector2i(0, 3), Vector2i(4, 3), Vector2i(0, 4), Vector2i(1, 4), Vector2i(3, 4), Vector2i(4, 4)]
 	vessel1.InitiallyLockedCells = [Vector2i(2, 4), Vector2i(3, 5)]
 	available_vessels.append(vessel1)
 
@@ -204,6 +205,7 @@ func _setup_vessels() -> void:
 	vessel2.GroinCells = [Vector2i(2, 2), Vector2i(2, 3)]
 	vessel2.LimbsCells = [Vector2i(0, 1), Vector2i(4, 1), Vector2i(0, 2), Vector2i(4, 2)]
 	vessel2.GeneralCells = [Vector2i(1, 2), Vector2i(3, 2)]
+	vessel2.InactiveCells = [Vector2i(0, 3), Vector2i(1, 3), Vector2i(3, 3), Vector2i(4, 3), Vector2i(2, 4)]
 	vessel2.InitiallyLockedCells = [Vector2i(0, 2), Vector2i(4, 2)]
 	available_vessels.append(vessel2)
 

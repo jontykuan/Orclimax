@@ -10,7 +10,8 @@ namespace Orclimax.Core
         Head = 1,
         Chest = 2,
         Groin = 3,
-        Limbs = 4
+        Limbs = 4,
+        Inactive = 5
     }
 
     public enum ItemCategory

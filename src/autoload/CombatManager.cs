@@ -76,13 +76,14 @@ namespace Orclimax.Autoload
             foreach (var inst in placedItems)
             {
                 ItemData item = inst.Item;
+                float ratio = inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid);
                 
-                // Add stat modifiers
-                baseMaxHp += item.ArmorBonus * 5f; // Extra health from armor items
-                baseMoveSpeed += item.SpeedBonus;
-                baseAttackSpeed += item.AttackSpeedBonus;
-                baseArmor += item.ArmorBonus;
-                basePleasureRate += item.PleasureGain;
+                // Add stat modifiers scaled by active ratio
+                baseMaxHp += item.ArmorBonus * ratio * 5f; // Extra health from armor items
+                baseMoveSpeed += item.SpeedBonus * ratio;
+                baseAttackSpeed += item.AttackSpeedBonus * ratio;
+                baseArmor += item.ArmorBonus * ratio;
+                basePleasureRate += item.PleasureGain * ratio;
 
                 // If it is a weapon, register it for auto-combat trigger
                 if (item.Category == ItemCategory.Weapon)
@@ -117,8 +118,9 @@ namespace Orclimax.Autoload
                 {
                     timer += (float)delta;
                     
-                    // Cooldown is reduced by AttackSpeed multiplier
-                    float actualCooldown = Math.Max(0.1f, weapon.Cooldown / AttackSpeed);
+                    // Cooldown is scaled by active ratio (lower ratio increases cooldown)
+                    float ratio = Math.Max(0.05f, inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid));
+                    float actualCooldown = Math.Max(0.1f, (weapon.Cooldown / ratio) / AttackSpeed);
 
                     if (timer >= actualCooldown)
                     {
@@ -138,7 +140,9 @@ namespace Orclimax.Autoload
         private void FireWeapon(GridItemInstance inst)
         {
             ItemData weapon = inst.Item;
-            EmitSignal(SignalName.WeaponFired, weapon.Id, weapon.Damage);
+            float ratio = Math.Max(0.05f, inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid));
+            float finalDamage = weapon.Damage * ratio;
+            EmitSignal(SignalName.WeaponFired, weapon.Id, finalDamage);
 
             // Attacking also performs lower body action, which increases pleasure!
             // Let's add pleasure proportional to weapon damage/hits
