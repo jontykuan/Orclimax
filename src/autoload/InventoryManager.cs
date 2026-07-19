@@ -15,7 +15,21 @@ namespace Orclimax.Autoload
         [Signal] public delegate void StashUpdatedEventHandler();
 
         public VesselData CurrentVessel { get; private set; }
-        public GridData BackpackGrid { get; private set; } = new GridData();
+        public Dictionary<string, GridData> VesselGrids { get; private set; } = new Dictionary<string, GridData>();
+        public GridData BackpackGrid
+        {
+            get
+            {
+                if (CurrentVessel == null) return null;
+                if (!VesselGrids.TryGetValue(CurrentVessel.Id, out GridData grid))
+                {
+                    grid = new GridData();
+                    CurrentVessel.InitializeGrid(grid);
+                    VesselGrids[CurrentVessel.Id] = grid;
+                }
+                return grid;
+            }
+        }
         public Godot.Collections.Array<ItemData> Stash { get; private set; } = new Godot.Collections.Array<ItemData>();
         
         // List of all available recipes
@@ -53,41 +67,31 @@ namespace Orclimax.Autoload
         {
             if (vessel == null) return;
 
-            // 1. Gather all currently placed items
-            var oldPlaced = new List<GridItemInstance>();
-            if (CurrentVessel != null)
+            // 1. If not keeping equipped state, strip all items from current vessel to stash
+            if (!keepEquipped && CurrentVessel != null)
             {
-                oldPlaced = BackpackGrid.PlacedItems.Values.ToList();
-            }
-
-            // 2. Clear old grid cells/items
-            BackpackGrid.ClearGrid();
-
-            // 3. Set the new Vessel and initialize grid layout
-            CurrentVessel = vessel;
-            CurrentVessel.InitializeGrid(BackpackGrid);
-
-            // 4. Try to re-place or return items to stash
-            if (keepEquipped)
-            {
-                foreach (var inst in oldPlaced)
+                var grid = BackpackGrid;
+                if (grid != null)
                 {
-                    if (BackpackGrid.CanPlaceItem(inst.Item, inst.AnchorCoords, inst.RotationSteps))
-                    {
-                        BackpackGrid.PlaceItem(inst.Item, inst.AnchorCoords, inst.RotationSteps, inst.InstanceId);
-                    }
-                    else
+                    var instances = grid.PlacedItems.Values.ToList();
+                    foreach (var inst in instances)
                     {
                         Stash.Add(inst.Item);
                     }
+                    grid.ClearGrid();
+                    CurrentVessel.InitializeGrid(grid);
                 }
             }
-            else
+
+            // 2. Switch current active Vessel
+            CurrentVessel = vessel;
+
+            // 3. Initialize target Vessel's grid if not exists
+            if (!VesselGrids.ContainsKey(vessel.Id))
             {
-                foreach (var inst in oldPlaced)
-                {
-                    Stash.Add(inst.Item);
-                }
+                var newGrid = new GridData();
+                vessel.InitializeGrid(newGrid);
+                VesselGrids[vessel.Id] = newGrid;
             }
 
             EmitSignal(SignalName.VesselChanged, CurrentVessel);

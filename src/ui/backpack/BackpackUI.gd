@@ -57,6 +57,7 @@ func _ready() -> void:
 
 	# 3. Initialize default vessels and dropdown selection
 	_setup_vessels()
+	keep_equip_checkbox.toggle_mode = true
 
 	# 4. Initial UI draws
 	# Connect reroll button
@@ -231,7 +232,19 @@ func _setup_vessels() -> void:
 func _on_vessel_option_selected(index: int) -> void:
 	var selected_vessel = available_vessels[index]
 	var keep_equip = keep_equip_checkbox.button_pressed
+	var current_grid = InventoryManager.BackpackGrid
+	var before_count = 0
+	if current_grid:
+		before_count = current_grid.PlacedItems.size()
+	
+	print("GDScript: selected Vessel index: ", index, " keep_equip: ", keep_equip, " Placed items count before: ", before_count)
 	InventoryManager.SetVessel(selected_vessel, keep_equip)
+	
+	var after_grid = InventoryManager.BackpackGrid
+	var after_count = 0
+	if after_grid:
+		after_count = after_grid.PlacedItems.size()
+	print("GDScript: Switch done. New vessel items count: ", after_count)
 
 func _on_gold_changed(new_gold: int) -> void:
 	gold_label.text = "GOLD: %d" % new_gold
