@@ -53,10 +53,10 @@ namespace Orclimax.Autoload
 
             // 2. Fetch base stats
             float baseMaxHp = 100f;
-            float baseMoveSpeed = 250f;
+            float baseMoveSpeed = GameConfig.Instance != null ? GameConfig.Instance.BaseMoveSpeed : 250f;
             float baseAttackSpeed = 1.5f;
             float baseArmor = 0f;
-            float basePleasureRate = 0.5f;
+            float basePleasureRate = GameConfig.Instance != null ? GameConfig.Instance.DefaultPleasureRateMultiplier : 0.5f;
 
             if (InventoryManager.Instance.CurrentVessel != null)
             {
@@ -65,7 +65,7 @@ namespace Orclimax.Autoload
             }
             else
             {
-                MaxPleasure = 100f;
+                MaxPleasure = GameConfig.Instance != null ? GameConfig.Instance.DefaultBaseMaxPleasure : 100f;
             }
 
             // 3. Scan equipped items in the backpack grid and sum up bonuses
@@ -107,11 +107,11 @@ namespace Orclimax.Autoload
         public Godot.Collections.Dictionary GetCurrentStats()
         {
             float baseMaxHp = 100f;
-            float baseMoveSpeed = 250f;
+            float baseMoveSpeed = GameConfig.Instance != null ? GameConfig.Instance.BaseMoveSpeed : 250f;
             float baseAttackSpeed = 1.5f;
             float baseArmor = 0f;
-            float basePleasureRate = 0.5f;
-            float maxPleasure = 100f;
+            float basePleasureRate = GameConfig.Instance != null ? GameConfig.Instance.DefaultPleasureRateMultiplier : 0.5f;
+            float maxPleasure = GameConfig.Instance != null ? GameConfig.Instance.DefaultBaseMaxPleasure : 100f;
 
             if (InventoryManager.Instance.CurrentVessel != null)
             {
@@ -184,8 +184,8 @@ namespace Orclimax.Autoload
             EmitSignal(SignalName.WeaponFired, weapon.Id, finalDamage);
 
             // Attacking also performs lower body action, which increases pleasure!
-            // Let's add pleasure proportional to weapon damage/hits
-            float thrustPleasure = 2.0f * PleasureAccumulationRate;
+            float baseThrust = GameConfig.Instance != null ? GameConfig.Instance.ThrustPleasureGain : 2.0f;
+            float thrustPleasure = baseThrust * PleasureAccumulationRate;
             AddPleasure(thrustPleasure);
         }
 

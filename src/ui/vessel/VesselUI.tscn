@@ -1,0 +1,159 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8v3s5n9m1p2q"]
+
+[ext_resource type="Script" path="res://src/ui/vessel/VesselUI.gd" id="1_vui"]
+
+[node name="VesselUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vui")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.08, 0.12, 1)
+
+[node name="MainLayout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 25.0
+offset_right = -30.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="TopBar" type="HBoxContainer" parent="MainLayout"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MainLayout/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 26
+text = "VESSEL MANAGEMENT (魔導器整備與選擇)"
+
+[node name="Spacer" type="Control" parent="MainLayout/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackToTitleButton" type="Button" parent="MainLayout/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 36)
+text = "Title Screen"
+
+[node name="ContentHBox" type="HBoxContainer" parent="MainLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 25
+
+[node name="VesselSelectionList" type="VBoxContainer" parent="MainLayout/ContentHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(260, 0)
+theme_override_constants/separation = 12
+
+[node name="ListLabel" type="Label" parent="MainLayout/ContentHBox/VesselSelectionList"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Available Vessels:"
+
+[node name="VesselScroll" type="ScrollContainer" parent="MainLayout/ContentHBox/VesselSelectionList"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VesselList" type="VBoxContainer" parent="MainLayout/ContentHBox/VesselSelectionList/VesselScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="DetailsPanel" type="HBoxContainer" parent="MainLayout/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="LeftDetails" type="VBoxContainer" parent="MainLayout/ContentHBox/DetailsPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="VesselNameLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.22, 0.74, 0.97, 1)
+theme_override_font_sizes/font_size = 22
+text = "Character Name"
+
+[node name="SensTitle" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.45, 0.71, 1)
+theme_override_font_sizes/font_size = 16
+text = "Body Part Sensitivity & Development Levels:"
+
+[node name="SensitivitiesGroup" type="VBoxContainer" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeadSensLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails/SensitivitiesGroup"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Head: Sens x1.0 (Dev Lv.1)"
+
+[node name="ChestSensLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails/SensitivitiesGroup"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Chest: Sens x1.2 (Dev Lv.1)"
+
+[node name="GroinSensLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails/SensitivitiesGroup"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Groin: Sens x1.5 (Dev Lv.1)"
+
+[node name="LimbsSensLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails/SensitivitiesGroup"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Limbs: Sens x0.8 (Dev Lv.1)"
+
+[node name="PleasureMultipliersLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/LeftDetails"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.7, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "Max Pleasure: 100 | Gain Rate: 0.5x"
+
+[node name="RightDetails" type="VBoxContainer" parent="MainLayout/ContentHBox/DetailsPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="SkillTitleLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/RightDetails"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 18
+text = "Climax Skill: Lightning Cascade"
+
+[node name="SkillDescLabel" type="Label" parent="MainLayout/ContentHBox/DetailsPanel/RightDetails"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "Skill description..."
+autowrap_mode = 2
+
+[node name="TraitsTextLabel" type="RichTextLabel" parent="MainLayout/ContentHBox/DetailsPanel/RightDetails"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[color=#f59e0b]Traits:[/color]\nPassive trait details..."
+
+[node name="SelectVesselButton" type="Button" parent="MainLayout/ContentHBox/DetailsPanel/RightDetails"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+theme_override_font_sizes/font_size = 18
+text = "Confirm & Proceed to World Map ->"

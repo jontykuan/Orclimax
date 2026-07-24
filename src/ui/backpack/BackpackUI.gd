@@ -49,6 +49,9 @@ var shop_slots_locked: Array:
 	set(val):
 		InventoryManager.ShopSlotsLocked = val
 
+@onready var to_vessel_button: Button = $MainLayout/Header/ToVesselButton
+@onready var to_map_button: Button = $MainLayout/Header/ToMapButton
+
 func _ready() -> void:
 	# 1. Load C# Singletons and connect signals
 	var gm = GameManager
@@ -60,6 +63,9 @@ func _ready() -> void:
 	im.connect("VesselChanged", _on_vessel_changed)
 	im.connect("GridUpdated", _on_grid_updated)
 	im.connect("StashUpdated", _on_stash_updated)
+
+	to_vessel_button.pressed.connect(func(): GameManager.GoToVesselSelect())
+	to_map_button.pressed.connect(func(): GameManager.GoToMap())
 
 	# 2. Setup mock test items
 	_setup_test_items()
@@ -635,12 +641,7 @@ func _handle_drop() -> void:
 
 
 func _on_start_combat_pressed() -> void:
-	# Transition to Combat scene
-	GameManager.CurrentState = 1 # GameState.Combat
-	CombatManager.StartCombat()
-	
-	# For prototype, we will load the combat scene
-	get_tree().change_scene_to_file("res://src/entities/player/Level.tscn")
+	GameManager.StartCombatNode()
 
 func _update_orc_stats() -> void:
 	var stats = CombatManager.GetCurrentStats()
@@ -714,4 +715,3 @@ func _on_item_hovered_csharp(item_data: Resource) -> void:
 func _on_item_unhovered() -> void:
 	desc_title.text = "Item Details"
 	desc_text.text = "[center][color=#888899]Hover an item to view description[/color][/center]"
-

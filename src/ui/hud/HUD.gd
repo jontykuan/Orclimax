@@ -74,28 +74,28 @@ func _on_climax_triggered(_female_id: String, skill_name: String) -> void:
 	tween.tween_property(climax_overlay, "visible", false, 0.25)
 	
 	# Deal massive climax magic damage to all enemies currently on screen!
+	var blast_dmg: float = GameConfig.ClimaxBlastDamage if GameConfig else 50.0
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	for enemy in enemies:
 		if enemy.has_method("take_damage"):
-			enemy.take_damage(50.0) # Massive blast damage
+			enemy.take_damage(blast_dmg)
 
 func _on_game_state_changed(new_state: int) -> void:
-	if new_state == 2: # GameState.GameOver
+	if new_state == 5: # GameState.GameOver
 		climax_label.text = "ORC DEFEATED"
 		climax_overlay.color = Color(0.3, 0.1, 0.1, 0.8)
 		climax_overlay.visible = true
 		
-		# Return to shop button
 		var timer = get_tree().create_timer(1.5)
 		timer.timeout.connect(func():
-			GameManager.CurrentState = 0 # Shop
-			get_tree().change_scene_to_file("res://src/ui/backpack/BackpackUI.tscn")
+			GameManager.GoToTitle()
 		)
+	elif new_state == 6: # GameState.Victory
+		show_victory()
 
 func show_victory() -> void:
 	victory_panel.visible = true
 
 func _on_return_button_pressed() -> void:
-	# Advance stage and return to shop
+	# Advance stage and return to map
 	GameManager.AdvanceStage()
-	get_tree().change_scene_to_file("res://src/ui/backpack/BackpackUI.tscn")

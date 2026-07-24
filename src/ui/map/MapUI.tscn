@@ -1,0 +1,174 @@
+[gd_scene load_steps=2 format=3 uid="uid://m4a9p2x7v5k1"]
+
+[ext_resource type="Script" path="res://src/ui/map/MapUI.gd" id="1_map"]
+
+[node name="MapUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_map")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.08, 0.11, 1)
+
+[node name="MainLayout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 25.0
+offset_right = -30.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="MainLayout"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="StageTitle" type="Label" parent="MainLayout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 24
+text = "WORLD MAP — STAGE 1"
+
+[node name="GoldLabel" type="Label" parent="MainLayout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.976471, 0.811765, 0.317647, 1)
+theme_override_font_sizes/font_size = 20
+text = "GOLD: 15"
+
+[node name="Spacer" type="Control" parent="MainLayout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackToVesselButton" type="Button" parent="MainLayout/Header"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 36)
+text = "Vessel Select"
+
+[node name="MapViewport" type="PanelContainer" parent="MainLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NodesContainer" type="Control" parent="MainLayout/MapViewport"]
+layout_mode = 2
+
+[node name="Node1" type="Button" parent="MainLayout/MapViewport/NodesContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -30.0
+offset_right = -340.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "[Cleared]
+1-1: Borderlands"
+
+[node name="Node2A" type="Button" parent="MainLayout/MapViewport/NodesContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -140.0
+offset_right = 0.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "[Available]
+1-2A: Black Market"
+
+[node name="Node2B" type="Button" parent="MainLayout/MapViewport/NodesContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = 80.0
+offset_right = 0.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "[Available]
+1-2B: Elite Vanguard"
+
+[node name="Node3" type="Button" parent="MainLayout/MapViewport/NodesContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 220.0
+offset_top = -30.0
+offset_right = 380.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "[Boss]
+1-3: Sanctuary Keep"
+
+[node name="DetailPanel" type="PanelContainer" parent="MainLayout"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 100)
+
+[node name="Margin" type="MarginContainer" parent="MainLayout/DetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+
+[node name="DetailHBox" type="HBoxContainer" parent="MainLayout/DetailPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="NodeInfo" type="VBoxContainer" parent="MainLayout/DetailPanel/Margin/DetailHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="NodeTitle" type="Label" parent="MainLayout/DetailPanel/Margin/DetailHBox/NodeInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 18
+text = "Stage 1-1: Orc Borderlands"
+
+[node name="NodeDesc" type="Label" parent="MainLayout/DetailPanel/Margin/DetailHBox/NodeInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "Normal Combat - Basic enemies ahead"
+
+[node name="EnterPrepButton" type="Button" parent="MainLayout/DetailPanel/Margin/DetailHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 48)
+theme_override_font_sizes/font_size = 16
+text = "Backpack Prep (整備)"
+
+[node name="EnterCombatButton" type="Button" parent="MainLayout/DetailPanel/Margin/DetailHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 48)
+theme_override_font_sizes/font_size = 16
+text = "Enter Combat (戰鬥)"

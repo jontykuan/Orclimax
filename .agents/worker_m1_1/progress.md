@@ -1,0 +1,12 @@
+- [x] Initialized workspace and briefing
+- [x] Read Explorer 1, 2, 3 analysis reports
+- [x] Implement GameConfig.cs and register in project.godot
+- [x] Refactor Player.gd, EnemyBase.gd, CombatManager.cs, HUD.gd to use GameConfig
+- [x] Update VesselData.cs with sensitivity and trait fields
+- [x] Create TitleScreen.tscn and TitleScreen.gd
+- [x] Create VesselUI.tscn and VesselUI.gd
+- [x] Create MapUI.tscn and MapUI.gd
+- [x] Clean up BackpackUI.tscn (remove HelpArea)
+- [x] Expand GameState enum and implement ChangeState in GameManager.cs
+- [x] Build & test verification (`dotnet build`)
+- [x] Write handoff report and send completion message

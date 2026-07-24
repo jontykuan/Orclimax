@@ -13,9 +13,24 @@ namespace Orclimax.Autoload
         [Signal] public delegate void GoldChangedEventHandler(int newGold);
         [Signal] public delegate void StageChangedEventHandler(int newStage);
 
-        private GameState _currentState = GameState.Shop;
-        private int _gold = 15; // Starting gold
+        private GameState _currentState = GameState.Title;
+        private int _gold = 15;
         private int _currentStage = 1;
+
+        public const string TitleScenePath = "res://src/ui/title/TitleScreen.tscn";
+        public const string VesselSelectScenePath = "res://src/ui/vessel/VesselUI.tscn";
+        public const string BackpackScenePath = "res://src/ui/backpack/BackpackUI.tscn";
+        public const string MapScenePath = "res://src/ui/map/MapUI.tscn";
+        public const string CombatScenePath = "res://src/entities/player/Level.tscn";
+
+        private readonly Dictionary<GameState, string> _scenePaths = new Dictionary<GameState, string>
+        {
+            { GameState.Title, TitleScenePath },
+            { GameState.VesselSelect, VesselSelectScenePath },
+            { GameState.Backpack, BackpackScenePath },
+            { GameState.WorldMap, MapScenePath },
+            { GameState.Combat, CombatScenePath }
+        };
 
         public GameState CurrentState
         {
@@ -67,8 +82,39 @@ namespace Orclimax.Autoload
 
         public override void _Ready()
         {
-            // Initial unlocked characters (e.g. starting girl)
+            // Initial unlocked characters
             UnlockedFemaleIds.Add("girl_01");
+            _gold = GameConfig.Instance != null ? GameConfig.Instance.InitialGold : 15;
+        }
+
+        public void ChangeState(GameState newState)
+        {
+            CurrentState = newState;
+            if (_scenePaths.TryGetValue(newState, out string path))
+            {
+                GetTree().ChangeSceneToFile(path);
+            }
+        }
+
+        public void StartNewGame()
+        {
+            Gold = GameConfig.Instance != null ? GameConfig.Instance.InitialGold : 15;
+            CurrentStage = 1;
+            GoToVesselSelect();
+        }
+
+        public void GoToTitle() => ChangeState(GameState.Title);
+        public void GoToVesselSelect() => ChangeState(GameState.VesselSelect);
+        public void GoToBackpack() => ChangeState(GameState.Backpack);
+        public void GoToMap() => ChangeState(GameState.WorldMap);
+
+        public void StartCombatNode()
+        {
+            if (CombatManager.Instance != null)
+            {
+                CombatManager.Instance.StartCombat();
+            }
+            ChangeState(GameState.Combat);
         }
 
         public void AddGold(int amount)
@@ -89,8 +135,9 @@ namespace Orclimax.Autoload
         public void AdvanceStage()
         {
             CurrentStage++;
-            Gold += 10; // Award 10 gold for clearing the stage
-            CurrentState = GameState.Shop;
+            int bonus = GameConfig.Instance != null ? GameConfig.Instance.StageClearGold : 10;
+            AddGold(bonus);
+            GoToMap();
         }
 
         public void TriggerGameOver()

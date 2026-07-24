@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="Orclimax"
-run/main_scene="res://src/ui/backpack/BackpackUI.tscn"
+run/main_scene="res://src/ui/title/TitleScreen.tscn"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
+GameConfig="*res://src/autoload/GameConfig.cs"
 GameManager="*res://src/autoload/GameManager.cs"
 InventoryManager="*res://src/autoload/InventoryManager.cs"
 CombatManager="*res://src/autoload/CombatManager.cs"

@@ -4,6 +4,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orclimax", "Orclimax.csproj", "{A87DE98C-D137-47DF-B268-A39B2BFCEE88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orclimax.Tests", "tests\Orclimax.Tests\Orclimax.Tests.csproj", "{B982E471-1234-4567-89AB-CDEF12345678}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,5 +19,11 @@ Global
 		{A87DE98C-D137-47DF-B268-A39B2BFCEE88}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
 		{A87DE98C-D137-47DF-B268-A39B2BFCEE88}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{A87DE98C-D137-47DF-B268-A39B2BFCEE88}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{B982E471-1234-4567-89AB-CDEF12345678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B982E471-1234-4567-89AB-CDEF12345678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B982E471-1234-4567-89AB-CDEF12345678}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{B982E471-1234-4567-89AB-CDEF12345678}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{B982E471-1234-4567-89AB-CDEF12345678}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{B982E471-1234-4567-89AB-CDEF12345678}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 	EndGlobalSection
 EndGlobal

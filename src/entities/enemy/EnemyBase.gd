@@ -32,14 +32,25 @@ var current_action_idx: int = 0
 @onready var sprite: ColorRect = $ColorRect
 
 func _ready() -> void:
+	if GameConfig:
+		max_hp = GameConfig.DefaultEnemyMaxHp
+		speed = GameConfig.DefaultEnemySpeed
+		gold_reward = GameConfig.DefaultGoldReward
+		drop_chance = GameConfig.DefaultDropChance
+
 	hp = max_hp
 	add_to_group("enemies")
 	
 	# Configure multiple actions for rotation mechanism
-	# Action 1: Basic Claw Slash (Quick, low damage)
-	actions.append(EnemyAction.new("Claw Slash", 1.5, 3.0, 110.0, "Quick front slash"))
-	# Action 2: Heavy Cleave (Slow, high damage)
-	actions.append(EnemyAction.new("Heavy Cleave", 4.0, 8.0, 130.0, "Devastating slow cleave"))
+	var claw_cd = GameConfig.ClawSlashCooldown if GameConfig else 1.5
+	var claw_dmg = GameConfig.ClawSlashDamage if GameConfig else 3.0
+	var claw_rng = GameConfig.ClawSlashRange if GameConfig else 110.0
+	actions.append(EnemyAction.new("Claw Slash", claw_cd, claw_dmg, claw_rng, "Quick front slash"))
+
+	var cleave_cd = GameConfig.HeavyCleaveCooldown if GameConfig else 4.0
+	var cleave_dmg = GameConfig.HeavyCleaveDamage if GameConfig else 8.0
+	var cleave_rng = GameConfig.HeavyCleaveRange if GameConfig else 130.0
+	actions.append(EnemyAction.new("Heavy Cleave", cleave_cd, cleave_dmg, cleave_rng, "Devastating slow cleave"))
 	
 	# Find player
 	var players = get_tree().get_nodes_in_group("player")
@@ -82,7 +93,8 @@ func _physics_process(delta: float) -> void:
 	
 	# Simple gravity
 	if not is_on_floor():
-		velocity.y += 980 * delta
+		var grav: float = GameConfig.Gravity if GameConfig else 980.0
+		velocity.y += grav * delta
 	else:
 		velocity.y = 0
 

@@ -25,9 +25,12 @@ namespace Orclimax.Core
 
     public enum GameState
     {
-        Shop,        // Shop and Backpack preparation phase
-        Combat,      // Side-scrolling combat action phase
-        GameOver,    // Orc died
-        Victory      // Run won
+        Title = 0,       // Main title screen
+        VesselSelect = 1, // Vessel management & selection
+        Backpack = 2,    // Shop & equipment preparation
+        WorldMap = 3,    // Stage node navigation map
+        Combat = 4,      // Side-scrolling action combat
+        GameOver = 5,    // Orc defeated
+        Victory = 6      // Stage / run complete
     }
 }

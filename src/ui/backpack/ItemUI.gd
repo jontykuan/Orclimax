@@ -121,7 +121,7 @@ func update_visuals() -> void:
 	# 4. Add a label on the anchor cell (0, 0)
 	var label = Label.new()
 	if item_ref.IsLocked:
-		label.text = "🔒 " + item_ref.ItemName
+		label.text = "[LOCKED] " + item_ref.ItemName
 	else:
 		label.text = item_ref.ItemName
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

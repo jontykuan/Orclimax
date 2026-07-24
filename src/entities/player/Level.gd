@@ -42,10 +42,25 @@ func _on_spawn_timer_timeout() -> void:
 	# Spawn enemy on left or right of the player
 	var spawn_left = randf() < 0.5
 	var spawn_x = player_node.global_position.x + (randf_range(-700, -500) if spawn_left else randf_range(500, 700))
+	var spawn_y = 1050.0
 	
 	var enemy = EnemyScene.instantiate() as EnemyBase
+	
+	# Randomly pick enemy variant (0: Melee, 1: Ranged, 2: Shield, 3: Flying, 4: Snatcher)
+	var enemy_type = randi() % 5
+	match enemy_type:
+		1:
+			enemy.set_script(load("res://src/entities/enemy/EnemyRanged.gd"))
+		2:
+			enemy.set_script(load("res://src/entities/enemy/EnemyShield.gd"))
+		3:
+			enemy.set_script(load("res://src/entities/enemy/EnemyFlying.gd"))
+			spawn_y = 850.0 # Fly in air
+		4:
+			enemy.set_script(load("res://src/entities/enemy/EnemySnatcher.gd"))
+			
 	add_child(enemy)
-	enemy.position = Vector2(spawn_x, 1050) # same level
+	enemy.position = Vector2(spawn_x, spawn_y)
 
 func _complete_wave() -> void:
 	wave_active = false
