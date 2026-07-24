@@ -59,8 +59,8 @@ func _create_vessel_data_objects() -> void:
 	var v1 = load("res://src/core/VesselData.cs").new()
 	v1.Id = "girl_lydia"
 	v1.CharacterName = "Elven Mage Lydia"
-	v1.ClimaxSkillName = "Lightning Cascade"
-	v1.ClimaxSkillDescription = "Unleashes a cascade of divine lightning dealing massive area damage."
+	v1.ClimaxSkillName = "Flame Pillar Ring"
+	v1.ClimaxSkillDescription = "Summons a ring of fire pillars around the Orc, scorching enemies and applying stackable Burn."
 	v1.BaseMaxPleasure = 100.0
 	v1.PleasureBuildRateMultiplier = 0.5
 	v1.HeadSensitivity = 1.1
@@ -85,8 +85,8 @@ func _create_vessel_data_objects() -> void:
 	var v2 = load("res://src/core/VesselData.cs").new()
 	v2.Id = "girl_cynthia"
 	v2.CharacterName = "Elven Archer Cynthia"
-	v2.ClimaxSkillName = "Windstorm Arrow"
-	v2.ClimaxSkillDescription = "Summons gale-force arrows sweeping through all enemy ranks."
+	v2.ClimaxSkillName = "5-Arrow Volley"
+	v2.ClimaxSkillDescription = "Fires a rapid volley of 5 high-speed arrows forward in the direction facing."
 	v2.BaseMaxPleasure = 120.0
 	v2.PleasureBuildRateMultiplier = 0.6
 	v2.HeadSensitivity = 1.0

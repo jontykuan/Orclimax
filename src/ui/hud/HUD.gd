@@ -2,6 +2,8 @@ extends CanvasLayer
 
 class_name HUD
 
+const ProjectileScene = preload("res://src/entities/weapons/Projectile.tscn")
+
 @onready var hp_bar: ProgressBar = $BottomLeft/VBox/HPBar
 @onready var hp_label: Label = $BottomLeft/VBox/HPLabel
 @onready var pleasure_bar: ProgressBar = $BottomLeft/VBox/PleasureBar
@@ -157,19 +159,40 @@ func _on_climax_triggered(_female_id: String, skill_name: String) -> void:
 	
 	# Trigger specific climax visual/combat effects based on active female_id!
 	if female_id == "girl_lydia":
-		# Lydia: Lightning Cascade dealing area damage to all screen enemies
-		var blast_dmg: float = GameConfig.ClimaxBlastDamage if GameConfig else 50.0
-		var enemies = get_tree().get_nodes_in_group("enemies")
-		for enemy in enemies:
-			if is_instance_valid(enemy) and enemy.has_method("take_damage"):
-				enemy.take_damage(blast_dmg)
+		# Lydia: Ring of fire pillars around Orc dealing damage & inflicting Burn debuff
+		var player = get_tree().get_first_node_in_group("player")
+		if player:
+			var center_pos = player.global_position
+			var num_pillars = 10
+			var radius = 180.0
+			for i in range(num_pillars):
+				var angle = i * (TAU / num_pillars)
+				var offset = Vector2(cos(angle), sin(angle)) * radius
+				var proj = ProjectileScene.instantiate() as Projectile
+				get_tree().current_scene.add_child(proj)
+				proj.global_position = center_pos + offset
+				proj.setup(15.0, Vector2.ZERO, 0.0, false, true) # 15 dmg, fire pillar, applies Burn!
+
+			var enemies = get_tree().get_nodes_in_group("enemies")
+			for enemy in enemies:
+				if is_instance_valid(enemy):
+					var dist = center_pos.distance_to(enemy.global_position)
+					if dist <= 240.0 and enemy.has_method("take_damage"):
+						enemy.take_damage(25.0)
+
 	elif female_id == "girl_cynthia":
-		# Cynthia: Windstorm Arrow dealing physical area damage
-		var blast_dmg: float = 45.0
-		var enemies = get_tree().get_nodes_in_group("enemies")
-		for enemy in enemies:
-			if is_instance_valid(enemy) and enemy.has_method("take_damage"):
-				enemy.take_damage(blast_dmg)
+		# Cynthia: Rapidly shoot 5 arrows forward in direction facing
+		var player = get_tree().get_first_node_in_group("player")
+		if player:
+			var center_pos = player.global_position + Vector2(0, -30)
+			var base_dir = player.facing_direction if player.get("facing_direction") else Vector2.RIGHT
+			var angles = [-0.26, -0.13, 0.0, 0.13, 0.26]
+			for a in angles:
+				var shoot_dir = base_dir.rotated(a)
+				var proj = ProjectileScene.instantiate() as Projectile
+				get_tree().current_scene.add_child(proj)
+				proj.global_position = center_pos
+				proj.setup(22.0, shoot_dir, 650.0, false, false)
 	# Maye ("girl_maye") grants 120% item speed boost for 0.8s via CombatManager, NO screen wipe!
 
 func _on_game_state_changed(new_state: int) -> void:
