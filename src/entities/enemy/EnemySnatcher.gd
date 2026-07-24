@@ -13,6 +13,7 @@ func _ready() -> void:
 	max_hp = 35.0
 	hp = max_hp
 	speed = 130.0 # Fast runner to snatch and escape
+	gold_reward = 1 # Elite minion drops 1 gold
 	sprite.color = Color(0.9, 0.2, 0.5) # Hot pink snatcher tint
 	
 	# Add visual representation of stolen vessel on back

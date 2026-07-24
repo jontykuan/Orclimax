@@ -136,7 +136,10 @@ func _update_pip_expression(ratio: float) -> void:
 
 func _on_climax_triggered(_female_id: String, skill_name: String) -> void:
 	# Show Street Fighter style background H-CG / Climax Cut-in
-	climax_label.text = "CLIMAX!\nMAGIC OVERFLOW: " + skill_name.to_upper()
+	var vessel_name = "Vessel"
+	if InventoryManager.CurrentVessel != null:
+		vessel_name = InventoryManager.CurrentVessel.CharacterName
+	climax_label.text = "CLIMAX!\n%s\nSKILL: %s" % [vessel_name.to_upper(), skill_name.to_upper()]
 	climax_overlay.visible = true
 	climax_overlay.color = Color(1.0, 0.4, 0.7, 0.5) # Glowing semi-transparent pink
 	

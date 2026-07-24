@@ -7,6 +7,7 @@ func _ready() -> void:
 	max_hp = 60.0 # High health tank
 	hp = max_hp
 	speed = 45.0 # Slow movement
+	gold_reward = 1 # Elite minion drops 1 gold
 	sprite.color = Color(0.3, 0.4, 0.6) # Steel blue shield color
 	
 	# Lower Shield enemy attack damage (50% reduction)

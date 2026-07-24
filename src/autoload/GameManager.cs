@@ -129,7 +129,7 @@ namespace Orclimax.Autoload
             ClearedStageIds.Clear();
             if (InventoryManager.Instance != null)
             {
-                InventoryManager.Instance.CurrentShopItems.Clear();
+                InventoryManager.Instance.ResetNewGameInventory();
             }
             GoToVesselSelect();
         }

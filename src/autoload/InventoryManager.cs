@@ -53,6 +53,29 @@ namespace Orclimax.Autoload
         public override void _Ready()
         {
             LoadDefaultRecipes();
+            ResetNewGameInventory();
+        }
+
+        public void ResetNewGameInventory()
+        {
+            Stash.Clear();
+            VesselGrids.Clear();
+            CurrentShopItems.Clear();
+
+            // Starting Equipment: Rusty Sword
+            ItemData startingSword = new ItemData
+            {
+                Id = "wpn_sword",
+                ItemName = "Rusty Sword",
+                Category = ItemCategory.Weapon,
+                RequiredZone = PlacementZone.General,
+                Damage = 8.0f,
+                Cooldown = 1.4f,
+                BasePrice = 8,
+                ShapeOffsets = new Godot.Collections.Array<Vector2I> { Vector2I.Zero, new Vector2I(1, 0) }
+            };
+            Stash.Add(startingSword);
+            EmitSignal(SignalName.StashUpdated);
         }
 
         private void LoadDefaultRecipes()
