@@ -143,30 +143,47 @@ namespace Orclimax.Autoload
             };
         }
 
+        private float _itemSpeedBuffTimer = 0f;
+        private float _itemSpeedBuffMultiplier = 1.0f;
+
         public override void _Process(double delta)
+        {
+            UpdateCombat(delta);
+        }
+
+        public void UpdateCombat(double delta)
         {
             if (GameManager.Instance.CurrentState != GameState.Combat) return;
 
-            // 1. Automatically tick weapon cooldowns
-            foreach (var inst in _activeWeapons)
+            // Handle Maye Climax speed buff timer
+            if (_itemSpeedBuffTimer > 0f)
             {
-                string id = inst.InstanceId;
-                ItemData weapon = inst.Item;
-
-                if (_weaponTimers.TryGetValue(id, out float timer))
+                _itemSpeedBuffTimer -= (float)delta;
+                if (_itemSpeedBuffTimer <= 0f)
                 {
-                    timer += (float)delta;
-                    
-                    // Cooldown is scaled by active ratio (lower ratio increases cooldown)
-                    float ratio = Math.Max(0.05f, inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid));
-                    float actualCooldown = Math.Max(0.1f, (weapon.Cooldown / ratio) / AttackSpeed);
+                    _itemSpeedBuffTimer = 0f;
+                    _itemSpeedBuffMultiplier = 1.0f;
+                }
+            }
 
-                    if (timer >= actualCooldown)
-                    {
-                        // Fire weapon!
-                        FireWeapon(inst);
-                        timer = 0f; // Reset
-                    }
+            // 1. Update active weapon cooldown timers
+            var keys = new List<string>(_weaponTimers.Keys);
+            foreach (var id in keys)
+            {
+                var inst = _activeWeapons.Find(w => w.InstanceId == id);
+                if (inst == null) continue;
+
+                float ratio = Math.Max(0.05f, inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid));
+                float effectiveCooldown = Math.Max(0.2f, inst.Item.Cooldown / (AttackSpeed * ratio));
+
+                float timer = _weaponTimers[id] + (float)delta * _itemSpeedBuffMultiplier;
+                if (timer >= effectiveCooldown)
+                {
+                    FireWeapon(inst);
+                    _weaponTimers[id] = 0f;
+                }
+                else
+                {
                     _weaponTimers[id] = timer;
                 }
             }
@@ -238,6 +255,13 @@ namespace Orclimax.Autoload
             {
                 femaleId = InventoryManager.Instance.CurrentVessel.Id;
                 skillName = InventoryManager.Instance.CurrentVessel.ClimaxSkillName;
+            }
+
+            // Human Maiden Maye Climax Skill: Grants 150% item trigger speed for 1.8 seconds
+            if (femaleId == "girl_maye")
+            {
+                _itemSpeedBuffTimer = 1.8f;
+                _itemSpeedBuffMultiplier = 1.5f;
             }
 
             EmitSignal(SignalName.ClimaxTriggered, femaleId, skillName);

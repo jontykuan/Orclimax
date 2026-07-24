@@ -27,20 +27,23 @@ func _ready() -> void:
 
 	back_vessel_btn.pressed.connect(func(): GameManager.GoToVesselSelect())
 	prep_btn.pressed.connect(func(): GameManager.GoToBackpack())
-	combat_btn.pressed.connect(func(): GameManager.StartCombatNode())
+	combat_btn.pressed.connect(func():
+		GameManager.CurrentSelectedStageId = selected_node_id
+		GameManager.StartCombatNode()
+	)
 
-	btn_stage1.pressed.connect(func(): _on_node_selected("node_1", "Stage 1-1: Orc Borderlands", "Normal Combat - Basic enemies ahead"))
-	btn_stage2a.pressed.connect(func(): _on_node_selected("node_2a", "Stage 1-2A: Black Market Outpost", "Shop Node - Purchase equipment and toys"))
-	btn_stage2b.pressed.connect(func(): _on_node_selected("node_2b", "Stage 1-2B: Elite Vanguard", "Elite Combat - Dangerous enemy with higher loot drop rate"))
-	btn_stage3.pressed.connect(func(): _on_node_selected("node_3", "Stage 1-3: Sanctuary Keep", "Boss Combat - Stage Guardian"))
+	btn_stage1.pressed.connect(func(): _on_node_selected("flame_spire", "Stage 1: Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia (Unlocks Lydia)"))
+	btn_stage2a.pressed.connect(func(): _on_node_selected("tale_breeze", "Stage 2: Tale Breeze", "Enemies: Flat-shot Ranged, Parabolic Lob Ranged, Vessel Snatcher.\nBoss at 150s: Elven Archer Cynthia (Unlocks Cynthia)"))
+	btn_stage2b.pressed.connect(func(): _on_node_selected("flame_spire", "Stage 1: Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia"))
+	btn_stage3.pressed.connect(func(): _on_node_selected("tale_breeze", "Stage 2: Tale Breeze", "Enemies: Flat-shot Ranged, Parabolic Lob Ranged, Vessel Snatcher.\nBoss at 150s: Elven Archer Cynthia"))
 
-	_update_node_visuals()
+	_on_node_selected("flame_spire", "Stage 1: Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia (Unlocks Lydia)")
 
 func _on_gold_changed(gold: int) -> void:
 	gold_label.text = "GOLD: %d" % gold
 
 func _on_stage_changed(stage: int) -> void:
-	stage_label.text = "WORLD MAP — STAGE %d" % stage
+	stage_label.text = "WORLD MAP — SELECT COMBAT STAGE"
 
 func _on_node_selected(id: String, title: String, desc: String) -> void:
 	selected_node_id = id
@@ -49,8 +52,7 @@ func _on_node_selected(id: String, title: String, desc: String) -> void:
 	_update_node_visuals()
 
 func _update_node_visuals() -> void:
-	# Reset modulations
-	btn_stage1.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "node_1" else Color(1, 1, 1)
-	btn_stage2a.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "node_2a" else Color(1, 1, 1)
-	btn_stage2b.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "node_2b" else Color(1, 1, 1)
-	btn_stage3.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "node_3" else Color(1, 1, 1)
+	btn_stage1.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "flame_spire" else Color(1, 1, 1)
+	btn_stage2a.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "tale_breeze" else Color(1, 1, 1)
+	btn_stage2b.self_modulate = Color(1, 1, 1)
+	btn_stage3.self_modulate = Color(1, 1, 1)

@@ -12,10 +12,13 @@ namespace Orclimax.Autoload
         [Signal] public delegate void StateChangedEventHandler(int newState);
         [Signal] public delegate void GoldChangedEventHandler(int newGold);
         [Signal] public delegate void StageChangedEventHandler(int newStage);
+        [Signal] public delegate void VesselUnlockedEventHandler(string femaleId);
 
         private GameState _currentState = GameState.Title;
         private int _gold = 15;
         private int _currentStage = 1;
+
+        public string CurrentSelectedStageId { get; set; } = "flame_spire";
 
         public const string TitleScenePath = "res://src/ui/title/TitleScreen.tscn";
         public const string VesselSelectScenePath = "res://src/ui/vessel/VesselUI.tscn";
@@ -82,9 +85,21 @@ namespace Orclimax.Autoload
 
         public override void _Ready()
         {
-            // Initial unlocked characters
-            UnlockedFemaleIds.Add("girl_01");
+            // Initial unlocked character: Human Maiden Maye
+            if (!UnlockedFemaleIds.Contains("girl_maye"))
+            {
+                UnlockedFemaleIds.Add("girl_maye");
+            }
             _gold = GameConfig.Instance != null ? GameConfig.Instance.InitialGold : 15;
+        }
+
+        public void UnlockFemale(string femaleId)
+        {
+            if (!UnlockedFemaleIds.Contains(femaleId))
+            {
+                UnlockedFemaleIds.Add(femaleId);
+                EmitSignal(SignalName.VesselUnlocked, femaleId);
+            }
         }
 
         public void ChangeState(GameState newState)
