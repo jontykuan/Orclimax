@@ -85,9 +85,38 @@ theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
 theme_override_font_sizes/font_size = 14
 text = "ACTIVE BUFF STATUS:"
 
-[node name="BuffList" type="VBoxContainer" parent="TopRight/BuffVBox"]
+[node name="TopCenter" type="MarginContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 15
+
+[node name="TimerVBox" type="VBoxContainer" parent="TopCenter"]
 layout_mode = 2
 theme_override_constants/separation = 4
+alignment = 1
+
+[node name="TimerLabel" type="Label" parent="TopCenter/TimerVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 22
+text = "TIME LEFT: 05:00"
+horizontal_alignment = 1
+
+[node name="WarningLabel" type="Label" parent="TopCenter/TimerVBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.35, 0.1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 14
+text = "[WARNING] ENEMY WAVE APPROACHING IN 5s!"
+horizontal_alignment = 1
 
 [node name="BottomLeft" type="MarginContainer" parent="."]
 anchors_preset = 2

@@ -9,7 +9,7 @@ const HUDScene = preload("res://src/ui/hud/HUD.tscn")
 var player_node: Player = null
 var hud_node: HUD = null
 
-var stage_duration: float = 180.0 # 3 minutes total
+var stage_duration: float = 300.0 # 5 minutes total (300s countdown)
 var stage_elapsed_time: float = 0.0
 var wave_timer: float = 0.0
 var wave_counter: int = 0
@@ -31,7 +31,7 @@ func _ready() -> void:
 	hud_node = HUDScene.instantiate() as HUD
 	add_child(hud_node)
 
-	# 3. Initial Wave Spawn (Wave 1 at 0s)
+	# 3. Initial Wave Spawn (Wave 1 at 0s immediately upon combat entry)
 	stage_active = true
 	stage_elapsed_time = 0.0
 	wave_timer = 0.0
@@ -46,6 +46,13 @@ func _process(delta: float) -> void:
 	stage_elapsed_time += delta
 	wave_timer += delta
 
+	# Update HUD countdown timer (300s -> 0s)
+	var time_remaining = max(0.0, stage_duration - stage_elapsed_time)
+	if hud_node:
+		hud_node.update_stage_timer(time_remaining)
+		# Show warning 5 seconds before next minion wave (wave_timer >= 25s)
+		hud_node.show_wave_warning(wave_timer >= (wave_interval - 5.0))
+
 	# Every 30 seconds, spawn a new minion wave (capped at 9 enemies max)
 	if wave_timer >= wave_interval:
 		wave_timer = 0.0
@@ -56,7 +63,7 @@ func _process(delta: float) -> void:
 		boss_spawned = true
 		_spawn_stage_boss()
 
-	# Stage ends at 180s (3 minutes)
+	# Stage ends at 300s (5 minutes)
 	if stage_elapsed_time >= stage_duration:
 		_complete_stage()
 
@@ -64,6 +71,9 @@ func _spawn_wave() -> void:
 	if not stage_active or not player_node: return
 
 	wave_counter += 1
+	# Award +3 gold per wave completed/spawned
+	GameManager.AddGold(3)
+
 	# Wave size scales up, capped at 9 enemies maximum
 	var num_enemies = min(9, 3 + (wave_counter - 1) * 2)
 	

@@ -101,7 +101,7 @@ func _setup_test_items() -> void:
 	dildo.Category = 1 # Toy
 	dildo.RequiredZone = 3 # Groin
 	dildo.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1)] # 1x2 vertical
-	dildo.PleasureGain = 2.5
+	dildo.PleasureGain = 0.83 # Reduced to 1/3
 	dildo.BasePrice = 6
 	test_items.append(dildo)
 
@@ -174,7 +174,7 @@ func _setup_test_items() -> void:
 	vibrating_sword.RequiredZone = 0 # General
 	vibrating_sword.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1)] # 1x2 vertical
 	vibrating_sword.Damage = 12.0
-	vibrating_sword.PleasureGain = 1.5
+	vibrating_sword.PleasureGain = 0.5 # Reduced to 1/3
 	vibrating_sword.Cooldown = 1.0
 	vibrating_sword.BasePrice = 18
 	vibrating_sword.SynergyDescription = "Deals damage and increases pleasure simultaneously."

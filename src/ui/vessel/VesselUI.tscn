@@ -40,7 +40,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
 theme_override_font_sizes/font_size = 26
-text = "VESSEL MANAGEMENT (魔導器整備與選擇)"
+text = "VESSEL SELECTION"
 
 [node name="Spacer" type="Control" parent="MainLayout/TopBar"]
 layout_mode = 2
@@ -156,4 +156,4 @@ text = "[color=#f59e0b]Traits:[/color]\nPassive trait details..."
 layout_mode = 2
 custom_minimum_size = Vector2(0, 48)
 theme_override_font_sizes/font_size = 18
-text = "Confirm & Proceed to World Map ->"
+text = "ENTER PREPARATION (進入準備頁面)"

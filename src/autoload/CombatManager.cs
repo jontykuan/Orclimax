@@ -293,11 +293,11 @@ namespace Orclimax.Autoload
                 skillName = InventoryManager.Instance.CurrentVessel.ClimaxSkillName;
             }
 
-            // Human Maiden Maye Climax Skill: Grants 150% item trigger speed for 1.8 seconds
+            // Human Maiden Maye Climax Skill: Grants 120% item trigger speed for 0.8 seconds
             if (femaleId == "girl_maye")
             {
-                _itemSpeedBuffTimer = 1.8f;
-                _itemSpeedBuffMultiplier = 1.5f;
+                _itemSpeedBuffTimer = 0.8f;
+                _itemSpeedBuffMultiplier = 1.2f;
             }
 
             EmitSignal(SignalName.ClimaxTriggered, femaleId, skillName);

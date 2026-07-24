@@ -21,6 +21,9 @@ class_name HUD
 @onready var thrust_bar: ProgressBar = $TopLeft/CooldownHBox/ThrustCD/Bar
 @onready var buff_list: VBoxContainer = $TopRight/BuffVBox/BuffList
 
+@onready var timer_label: Label = $TopCenter/TimerVBox/TimerLabel
+@onready var warning_label: Label = $TopCenter/TimerVBox/WarningLabel
+
 func _ready() -> void:
 	# Hide climax and victory overlays initially
 	climax_overlay.visible = false
@@ -38,6 +41,17 @@ func _ready() -> void:
 	# Initial values
 	_on_hp_changed(cm.CurrentHp, cm.MaxHp)
 	_on_pleasure_changed(cm.CurrentPleasure, cm.MaxPleasure)
+
+func update_stage_timer(remaining_seconds: float) -> void:
+	if not timer_label: return
+	var total_sec = max(0, int(ceil(remaining_seconds)))
+	var mins = total_sec / 60
+	var secs = total_sec % 60
+	timer_label.text = "TIME LEFT: %02d:%02d" % [mins, secs]
+
+func show_wave_warning(is_warning: bool) -> void:
+	if warning_label:
+		warning_label.visible = is_warning
 
 func _process(_delta: float) -> void:
 	var player = get_tree().get_first_node_in_group("player")

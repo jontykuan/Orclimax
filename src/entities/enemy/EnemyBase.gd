@@ -21,7 +21,7 @@ class EnemyAction:
 
 @export var max_hp: float = 30.0
 @export var speed: float = 80.0
-@export var gold_reward: int = 2
+@export var gold_reward: int = 1
 @export var drop_chance: float = 0.25 # 25% chance to drop item on death
 
 var hp: float = 30.0

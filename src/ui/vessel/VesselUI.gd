@@ -34,7 +34,7 @@ func _create_vessel_data_objects() -> void:
 	v0.Id = "girl_maye"
 	v0.CharacterName = "Human Maiden Maye"
 	v0.ClimaxSkillName = "Temporal Acceleration"
-	v0.ClimaxSkillDescription = "Grants Orc 150% item trigger speed for 1.8 seconds upon Climax."
+	v0.ClimaxSkillDescription = "Grants Orc 120% item trigger speed for 0.8 seconds upon Climax."
 	v0.BaseMaxPleasure = 90.0
 	v0.PleasureBuildRateMultiplier = 0.7
 	v0.HeadSensitivity = 1.0
@@ -45,7 +45,7 @@ func _create_vessel_data_objects() -> void:
 	v0.ChestDevLevel = 1
 	v0.GroinDevLevel = 1
 	v0.LimbsDevLevel = 1
-	v0.TraitsDescription = "Human maiden with high sensitivity (0.7x). Climax accelerates item triggers by 150% for 1.8s."
+	v0.TraitsDescription = "Human maiden with high sensitivity (0.7x). Climax accelerates item triggers by 120% for 0.8s."
 	v0.HeadCells = [Vector2i(2, 0)]
 	v0.ChestCells = [Vector2i(2, 1), Vector2i(2, 2)]
 	v0.GroinCells = [Vector2i(2, 3), Vector2i(2, 4)]

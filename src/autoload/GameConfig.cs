@@ -37,7 +37,7 @@ namespace Orclimax.Autoload
         private static float _defaultEnemyMaxHp = 30.0f;
         private static float _defaultEnemySpeed = 80.0f;
         private static float _defaultEnemyGravity = 980.0f;
-        private static int _defaultGoldReward = 2;
+        private static int _defaultGoldReward = 1;
         private static float _defaultDropChance = 0.25f;
 
         private static float _clawSlashCooldown = 1.5f;
@@ -57,7 +57,7 @@ namespace Orclimax.Autoload
 
         private static float _cellSize = 64.0f;
         private static int _shopRerollCost = 2;
-        private static int _stageClearGold = 10;
+        private static int _stageClearGold = 5;
         private static int _initialGold = 15;
 
         // Instance Export Properties (accessed via Instance or GDScript Autoload node)
