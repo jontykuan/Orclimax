@@ -30,6 +30,21 @@ namespace Orclimax.Autoload
         private Dictionary<string, float> _weaponTimers = new Dictionary<string, float>();
         private List<GridItemInstance> _activeWeapons = new List<GridItemInstance>();
 
+        // Buff / Debuff Timers
+        private float _itemSpeedBuffTimer = 0f;
+        private float _itemSpeedBuffMultiplier = 1.0f;
+
+        [Export]
+        public float TempAttackSpeedMultiplierTimer
+        {
+            get => _itemSpeedBuffTimer;
+            set => _itemSpeedBuffTimer = value;
+        }
+
+        [Export] public int BurnStacks { get; set; } = 0;
+        [Export] public float BurnTimer { get; set; } = 0f;
+        private float _burnTickTimer = 0f;
+
         public override void _EnterTree()
         {
             if (Instance == null)
@@ -143,9 +158,6 @@ namespace Orclimax.Autoload
             };
         }
 
-        private float _itemSpeedBuffTimer = 0f;
-        private float _itemSpeedBuffMultiplier = 1.0f;
-
         public override void _Process(double delta)
         {
             UpdateCombat(delta);
@@ -159,10 +171,28 @@ namespace Orclimax.Autoload
             if (_itemSpeedBuffTimer > 0f)
             {
                 _itemSpeedBuffTimer -= (float)delta;
-                if (_itemSpeedBuffTimer <= 0f)
+                if (_itemSpeedBuffTimer <= 0)
                 {
                     _itemSpeedBuffTimer = 0f;
                     _itemSpeedBuffMultiplier = 1.0f;
+                }
+            }
+
+            // Update Burn Debuff Tick
+            if (BurnTimer > 0)
+            {
+                BurnTimer -= (float)delta;
+                _burnTickTimer += (float)delta;
+                if (_burnTickTimer >= 1.0f)
+                {
+                    _burnTickTimer = 0f;
+                    TakeDamage(1.5f * BurnStacks);
+                }
+                if (BurnTimer <= 0)
+                {
+                    BurnTimer = 0f;
+                    BurnStacks = 0;
+                    _burnTickTimer = 0f;
                 }
             }
 
@@ -204,6 +234,12 @@ namespace Orclimax.Autoload
             float baseThrust = GameConfig.Instance != null ? GameConfig.Instance.ThrustPleasureGain : 2.0f;
             float thrustPleasure = baseThrust * PleasureAccumulationRate;
             AddPleasure(thrustPleasure);
+        }
+
+        public void ApplyBurn(int stacks = 1, float duration = 4.0f)
+        {
+            BurnStacks = Math.Min(5, BurnStacks + stacks);
+            BurnTimer = Math.Max(BurnTimer, duration);
         }
 
         public void TakeDamage(float amount)

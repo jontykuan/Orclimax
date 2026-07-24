@@ -64,23 +64,31 @@ func _update_buff_list(player: Node2D) -> void:
 	# 1. Maye Climax Item Speed Buff
 	if CombatManager.TempAttackSpeedMultiplierTimer > 0:
 		var lbl = Label.new()
-		lbl.text = "⚡ Temporal Surge (+150%% Speed): %.1fs" % CombatManager.TempAttackSpeedMultiplierTimer
+		lbl.text = "[BUFF] Temporal Surge (+150%% Speed): %.1fs" % CombatManager.TempAttackSpeedMultiplierTimer
 		lbl.add_theme_color_override("font_color", Color(0.96, 0.8, 0.2))
 		lbl.add_theme_font_size_override("font_size", 12)
 		buff_list.add_child(lbl)
 
-	# 2. Player Dash i-Frames
+	# 2. Stackable Burn Debuff Status
+	if CombatManager.BurnTimer > 0:
+		var lbl = Label.new()
+		lbl.text = "[BURN] Fire Damage x%d Stacks (%.1fs)" % [CombatManager.BurnStacks, CombatManager.BurnTimer]
+		lbl.add_theme_color_override("font_color", Color(1.0, 0.35, 0.1))
+		lbl.add_theme_font_size_override("font_size", 12)
+		buff_list.add_child(lbl)
+
+	# 3. Player Dash i-Frames
 	if player.get("is_dashing"):
 		var lbl = Label.new()
-		lbl.text = "🛡️ Evasion i-Frames Active"
+		lbl.text = "[STATE] Evasion i-Frames Active"
 		lbl.add_theme_color_override("font_color", Color(0.3, 0.9, 0.9))
 		lbl.add_theme_font_size_override("font_size", 12)
 		buff_list.add_child(lbl)
 
-	# 3. Player Parry Guard Stance
+	# 4. Player Parry Guard Stance
 	if player.get("is_parrying"):
 		var lbl = Label.new()
-		lbl.text = "⚔️ Precise Counter Stance Active"
+		lbl.text = "[STATE] Precise Counter Stance Active"
 		lbl.add_theme_color_override("font_color", Color(0.9, 0.3, 0.3))
 		lbl.add_theme_font_size_override("font_size", 12)
 		buff_list.add_child(lbl)

@@ -7,25 +7,27 @@ var damage: float = 10.0
 var direction: Vector2 = Vector2.RIGHT
 var is_slash: bool = false
 var lifetime: float = 0.5
+var applies_burn: bool = false
 
-func setup(p_damage: float, p_direction: Vector2, p_speed: float = 500.0, p_is_slash: bool = false) -> void:
+func setup(p_damage: float, p_direction: Vector2, p_speed: float = 500.0, p_is_slash: bool = false, p_applies_burn: bool = false) -> void:
 	damage = p_damage
 	direction = p_direction.normalized()
 	speed = p_speed
 	is_slash = p_is_slash
-	
+	applies_burn = p_applies_burn
+
 	var col_shape = $CollisionShape2D
 	if col_shape and col_shape.shape is RectangleShape2D:
 		if is_slash:
 			col_shape.shape.size = Vector2(80, 40)
-			col_shape.position = Vector2(40 * direction.x, 0) # Extend outward in front of player
+			col_shape.position = Vector2(40 * direction.x, 0)
 		else:
 			col_shape.shape.size = Vector2(16, 16)
 			col_shape.position = Vector2.ZERO
 	
 	if is_slash:
 		lifetime = 0.15
-		speed = 0.0 # Slashes stay attached to player
+		speed = 0.0
 	else:
 		lifetime = 1.5
 
@@ -36,6 +38,10 @@ func _ready() -> void:
 		color_rect.size = Vector2(80, 40)
 		color_rect.position = Vector2(0, -20)
 		color_rect.color = Color(1.0, 0.4, 0.4, 0.6) # Red slash
+	elif applies_burn:
+		color_rect.size = Vector2(18, 18)
+		color_rect.position = Vector2(-9, -9)
+		color_rect.color = Color(1.0, 0.3, 0.1, 1.0) # Bright fire orange/red bolt
 	else:
 		color_rect.size = Vector2(16, 16)
 		color_rect.position = Vector2(-8, -8)
@@ -51,8 +57,14 @@ func _physics_process(delta: float) -> void:
 		position += direction * speed * delta
 
 func _on_body_entered(body: Node2D) -> void:
-	# Check if the body is an enemy
+	# Check if body is an enemy or player
 	if body.is_in_group("enemies") and body.has_method("take_damage"):
 		body.take_damage(damage)
 		if not is_slash:
-			queue_free() # Destroy projectile on hit
+			queue_free()
+	elif body.is_in_group("player"):
+		if applies_burn and CombatManager.has_method("ApplyBurn"):
+			CombatManager.ApplyBurn(1, 4.0)
+		CombatManager.TakeDamage(damage)
+		if not is_slash:
+			queue_free()

@@ -42,13 +42,13 @@ func _fire_ranged_attack() -> void:
 	var dir = (target_player.global_position - global_position).normalized()
 	
 	match type:
-		0: # Parabolic lob shot (flight speed reduced, slightly higher damage)
+		0: # Parabolic lob fire bomb/arrow (applies Burn debuff on hit)
 			var proj = ProjectileScene.instantiate() as Projectile
 			get_parent().add_child(proj)
 			proj.global_position = global_position + Vector2(0, -30)
 			# Reduced flight speed velocity trajectory
 			var arc_vel = Vector2(dir.x * 220.0, -260.0)
-			proj.setup(4.5, arc_vel, 0.0, false) # 4.5 dmg (higher than normal flat shot)
+			proj.setup(4.5, arc_vel, 0.0, false, true) # 4.5 dmg + Burn debuff
 			
 		1: # High Flat shot (lower base damage: 2.0)
 			var proj = ProjectileScene.instantiate() as Projectile
