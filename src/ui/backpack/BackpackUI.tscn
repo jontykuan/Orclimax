@@ -55,17 +55,14 @@ text = "GOLD: 15"
 [node name="ToVesselButton" type="Button" parent="MainLayout/Header"]
 layout_mode = 2
 custom_minimum_size = Vector2(160, 40)
-text = "VESSEL (載體)"
+text = "BACK TO VESSEL (返回載體)"
 
 [node name="ToMapButton" type="Button" parent="MainLayout/Header"]
 layout_mode = 2
 custom_minimum_size = Vector2(160, 40)
-text = "WORLD MAP (地圖)"
+text = "TO WORLD MAP (前往地圖)"
 
-[node name="StartCombatButton" type="Button" parent="MainLayout/Header"]
-layout_mode = 2
-custom_minimum_size = Vector2(160, 40)
-text = "Enter Combat"
+
 
 [node name="VesselSelection" type="HBoxContainer" parent="MainLayout"]
 layout_mode = 2

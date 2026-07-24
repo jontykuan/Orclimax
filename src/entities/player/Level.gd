@@ -114,6 +114,9 @@ func _complete_stage() -> void:
 	stage_active = false
 	if spawn_timer: spawn_timer.stop()
 	
+	# Mark stage map node as cleared
+	GameManager.MarkStageCleared(current_stage_id)
+
 	if hud_node:
 		hud_node.show_victory()
 

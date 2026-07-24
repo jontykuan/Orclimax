@@ -125,7 +125,7 @@ func _populate_vessel_list() -> void:
 			if first_unlocked_vessel == null:
 				first_unlocked_vessel = v
 		else:
-			btn.text = "[LOCKED] " + v.CharacterName
+			btn.text = "[LOCKED] ??? (未解放)"
 			btn.disabled = true
 		btn.custom_minimum_size = Vector2(240, 44)
 		vessel_list_container.add_child(btn)
@@ -155,4 +155,5 @@ func _select_vessel(vessel: Resource) -> void:
 func _on_confirm_pressed() -> void:
 	if selected_vessel != null:
 		InventoryManager.SetVessel(selected_vessel, true)
-	GameManager.GoToMap()
+	# Go to Preparation (Backpack) phase first before stage map selection!
+	GameManager.GoToBackpack()

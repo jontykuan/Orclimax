@@ -71,6 +71,9 @@ namespace Orclimax.Autoload
         // List of unlocked females
         public Godot.Collections.Array<string> UnlockedFemaleIds { get; private set; } = new Godot.Collections.Array<string>();
 
+        // List of cleared stage map nodes
+        public Godot.Collections.Array<string> ClearedStageIds { get; private set; } = new Godot.Collections.Array<string>();
+
         public override void _EnterTree()
         {
             if (Instance == null)
@@ -102,6 +105,14 @@ namespace Orclimax.Autoload
             }
         }
 
+        public void MarkStageCleared(string stageId)
+        {
+            if (!ClearedStageIds.Contains(stageId))
+            {
+                ClearedStageIds.Add(stageId);
+            }
+        }
+
         public void ChangeState(GameState newState)
         {
             CurrentState = newState;
@@ -115,6 +126,7 @@ namespace Orclimax.Autoload
         {
             Gold = GameConfig.Instance != null ? GameConfig.Instance.InitialGold : 15;
             CurrentStage = 1;
+            ClearedStageIds.Clear();
             GoToVesselSelect();
         }
 

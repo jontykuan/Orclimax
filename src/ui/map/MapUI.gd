@@ -25,11 +25,13 @@ func _ready() -> void:
 	_on_gold_changed(gm.Gold)
 	_on_stage_changed(gm.CurrentStage)
 
-	back_vessel_btn.pressed.connect(func(): GameManager.GoToVesselSelect())
+	# Back button returns to Preparation (Backpack) phase!
+	back_vessel_btn.pressed.connect(func(): GameManager.GoToBackpack())
 	prep_btn.pressed.connect(func(): GameManager.GoToBackpack())
 	combat_btn.pressed.connect(func():
-		GameManager.CurrentSelectedStageId = selected_node_id
-		GameManager.StartCombatNode()
+		if not GameManager.ClearedStageIds.has(selected_node_id):
+			GameManager.CurrentSelectedStageId = selected_node_id
+			GameManager.StartCombatNode()
 	)
 
 	btn_stage1.pressed.connect(func(): _on_node_selected("flame_spire", "Stage 1: Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia (Unlocks Lydia)"))
@@ -47,12 +49,32 @@ func _on_stage_changed(stage: int) -> void:
 
 func _on_node_selected(id: String, title: String, desc: String) -> void:
 	selected_node_id = id
-	node_title_lbl.text = title
+	var is_cleared = GameManager.ClearedStageIds.has(id)
+	node_title_lbl.text = title + (" [CLEARED / 已攻略]" if is_cleared else " [AVAILABLE / 可攻略]")
 	node_desc_lbl.text = desc
 	_update_node_visuals()
 
 func _update_node_visuals() -> void:
+	var cleared_ids = GameManager.ClearedStageIds
+	
+	# Update Flame Spire Node button text & status
+	var flame_cleared = cleared_ids.has("flame_spire")
+	btn_stage1.text = (" [CLEARED]\nStage 1: Flame Spire" if flame_cleared else "[AVAILABLE]\nStage 1: Flame Spire")
 	btn_stage1.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "flame_spire" else Color(1, 1, 1)
+
+	# Update Tale Breeze Node button text & status
+	var breeze_cleared = cleared_ids.has("tale_breeze")
+	btn_stage2a.text = ("[CLEARED]\nStage 2: Tale Breeze" if breeze_cleared else "[AVAILABLE]\nStage 2: Tale Breeze")
 	btn_stage2a.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "tale_breeze" else Color(1, 1, 1)
-	btn_stage2b.self_modulate = Color(1, 1, 1)
-	btn_stage3.self_modulate = Color(1, 1, 1)
+
+	btn_stage2b.visible = false
+	btn_stage3.visible = false
+
+	# Cleared stages can be viewed, but cannot be re-entered!
+	var selected_is_cleared = cleared_ids.has(selected_node_id)
+	if selected_is_cleared:
+		combat_btn.disabled = true
+		combat_btn.text = "CLEARED (已攻略)"
+	else:
+		combat_btn.disabled = false
+		combat_btn.text = "ENTER COMBAT (進入戰鬥)"
