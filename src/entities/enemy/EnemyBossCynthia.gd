@@ -12,7 +12,7 @@ func _ready() -> void:
 	max_hp = 350.0
 	hp = max_hp
 	speed = 100.0 # Fast mobility archer
-	gold_reward = 25
+	gold_reward = 10
 	sprite.color = Color(0.2, 0.9, 0.5) # Forest green/teal archer boss aura
 	
 	# Scale boss size larger

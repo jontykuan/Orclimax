@@ -71,6 +71,7 @@ func _process(_delta: float) -> void:
 	_update_buff_list(player)
 
 func _update_buff_list(player: Node2D) -> void:
+	if not buff_list: return
 	for child in buff_list.get_children():
 		if is_instance_valid(child):
 			child.queue_free()

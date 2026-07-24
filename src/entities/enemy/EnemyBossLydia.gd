@@ -12,7 +12,7 @@ func _ready() -> void:
 	max_hp = 300.0
 	hp = max_hp
 	speed = 50.0
-	gold_reward = 25
+	gold_reward = 10
 	sprite.color = Color(0.9, 0.2, 0.9) # Bright magenta mage boss aura
 	
 	# Scale boss size larger

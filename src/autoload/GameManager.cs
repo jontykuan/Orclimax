@@ -166,7 +166,7 @@ namespace Orclimax.Autoload
         public void AdvanceStage()
         {
             CurrentStage++;
-            int bonus = GameConfig.Instance != null ? GameConfig.Instance.StageClearGold : 10;
+            int bonus = GameConfig.Instance != null ? GameConfig.Instance.StageClearGold : 0;
             AddGold(bonus);
             GoToMap();
         }

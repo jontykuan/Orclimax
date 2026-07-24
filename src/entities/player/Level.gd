@@ -19,6 +19,8 @@ var stage_active: bool = true
 var boss_spawned: bool = false
 var current_stage_id: String = "flame_spire"
 
+var wave_has_awarded_gold: bool = false
+
 func _ready() -> void:
 	current_stage_id = GameManager.CurrentSelectedStageId
 	
@@ -37,6 +39,7 @@ func _ready() -> void:
 	wave_timer = 0.0
 	wave_counter = 0
 	boss_spawned = false
+	wave_has_awarded_gold = true # Don't auto-award until wave 1 is spawned
 	
 	_spawn_wave()
 
@@ -45,6 +48,19 @@ func _process(delta: float) -> void:
 
 	stage_elapsed_time += delta
 	wave_timer += delta
+
+	# Check if current minion wave is completely cleared (award +3 gold once per wave)
+	if not wave_has_awarded_gold and wave_counter > 0:
+		var enemies = get_tree().get_nodes_in_group("enemies")
+		var has_minions = false
+		for enemy in enemies:
+			if is_instance_valid(enemy) and not (enemy is EnemyBossLydia or enemy is EnemyBossCynthia):
+				has_minions = true
+				break
+		if not has_minions:
+			wave_has_awarded_gold = true
+			GameManager.AddGold(3)
+			print("[WAVE CLEARED] Wave %d cleared! +3 Gold awarded!" % wave_counter)
 
 	# Update HUD countdown timer (300s -> 0s)
 	var time_remaining = max(0.0, stage_duration - stage_elapsed_time)
@@ -71,8 +87,7 @@ func _spawn_wave() -> void:
 	if not stage_active or not player_node: return
 
 	wave_counter += 1
-	# Award +3 gold per wave completed/spawned
-	GameManager.AddGold(3)
+	wave_has_awarded_gold = false # Reset wave clear award flag for new wave
 
 	# Wave size scales up, capped at 9 enemies maximum
 	var num_enemies = min(9, 3 + (wave_counter - 1) * 2)
