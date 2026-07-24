@@ -34,8 +34,32 @@ namespace Orclimax.Core
         // Shop Properties
         [Export] public int BasePrice { get; set; } = 10;
 
+        // Backpack Battles Style Star/Synergy Link properties
+        [Export] public Godot.Collections.Array<Vector2I> StarOffsets { get; set; } = new Godot.Collections.Array<Vector2I>();
+        [Export] public string StarSynergyType { get; set; } = "Cooldown"; // "Cooldown", "Damage", "Armor", "Pleasure"
+        [Export] public float StarSynergyBonusPerLink { get; set; } = 0.15f; // 15% bonus per linked item
+
         // Synergy description
         [Export] public string SynergyDescription { get; set; } = "";
+
+        public Godot.Collections.Array<Vector2I> GetRotatedStarOffsets(int rotationSteps)
+        {
+            int steps = (rotationSteps % 4 + 4) % 4;
+            var rotated = new Godot.Collections.Array<Vector2I>();
+            foreach (var offset in StarOffsets)
+            {
+                int x = offset.X;
+                int y = offset.Y;
+                for (int s = 0; s < steps; s++)
+                {
+                    int temp = x;
+                    x = -y;
+                    y = temp;
+                }
+                rotated.Add(new Vector2I(x, y));
+            }
+            return rotated;
+        }
 
         public Godot.Collections.Array<Vector2I> GetRotatedOffsets(int rotationSteps)
         {

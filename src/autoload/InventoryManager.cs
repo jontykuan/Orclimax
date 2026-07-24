@@ -72,7 +72,10 @@ namespace Orclimax.Autoload
                 Damage = 8.0f,
                 Cooldown = 1.4f,
                 BasePrice = 8,
-                ShapeOffsets = new Godot.Collections.Array<Vector2I> { Vector2I.Zero, new Vector2I(1, 0) }
+                ShapeOffsets = new Godot.Collections.Array<Vector2I> { Vector2I.Zero, new Vector2I(1, 0) },
+                StarOffsets = new Godot.Collections.Array<Vector2I> { new Vector2I(-1, 0), new Vector2I(2, 0), new Vector2I(0, -1), new Vector2I(0, 1), new Vector2I(1, -1), new Vector2I(1, 1) },
+                StarSynergyBonusPerLink = 0.20f,
+                SynergyDescription = "Star Link: +20% Cooldown & Damage per adjacent item!"
             };
             Stash.Add(startingSword);
             EmitSignal(SignalName.StashUpdated);

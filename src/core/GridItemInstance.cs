@@ -55,5 +55,38 @@ namespace Orclimax.Core
 
             return totalCells > 0 ? (float)activeCells / totalCells : 1f;
         }
+
+        /// <summary>
+        /// Gets all unique item instances placed in the Star/Synergy adjacent cells of this item.
+        /// </summary>
+        public HashSet<GridItemInstance> GetLinkedStarItems(GridData grid)
+        {
+            var linkedItems = new HashSet<GridItemInstance>();
+            if (grid == null || Item == null || Item.StarOffsets == null || Item.StarOffsets.Count == 0)
+                return linkedItems;
+
+            var rotatedStarOffsets = Item.GetRotatedStarOffsets(RotationSteps);
+            foreach (var offset in rotatedStarOffsets)
+            {
+                Vector2I starCoords = AnchorCoords + offset;
+                if (grid.Cells.TryGetValue(starCoords, out GridCell cell))
+                {
+                    if (cell.OccupyingItemInstanceId != null && cell.OccupyingItemInstanceId != InstanceId)
+                    {
+                        if (grid.PlacedItems.TryGetValue(cell.OccupyingItemInstanceId, out GridItemInstance linkedInst))
+                        {
+                            linkedItems.Add(linkedInst);
+                        }
+                    }
+                }
+            }
+            return linkedItems;
+        }
+
+        public float GetStarSynergyMultiplier(GridData grid)
+        {
+            int count = GetLinkedStarItems(grid).Count;
+            return 1.0f + (count * Item.StarSynergyBonusPerLink);
+        }
     }
 }

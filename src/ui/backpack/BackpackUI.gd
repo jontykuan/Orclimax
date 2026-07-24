@@ -101,8 +101,11 @@ func _setup_test_items() -> void:
 	dildo.Category = 1 # Toy
 	dildo.RequiredZone = 3 # Groin
 	dildo.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1)] # 1x2 vertical
-	dildo.PleasureGain = 0.83 # Reduced to 1/3
+	dildo.StarOffsets = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 2)]
+	dildo.StarSynergyBonusPerLink = 0.25
+	dildo.PleasureGain = 0.83
 	dildo.BasePrice = 6
+	dildo.SynergyDescription = "Star Link: +25% Pleasure per adjacent item!"
 	test_items.append(dildo)
 
 	# Item 2: Short Sword (Weapon, General zone)
@@ -112,9 +115,12 @@ func _setup_test_items() -> void:
 	sword.Category = 0 # Weapon
 	sword.RequiredZone = 0 # General
 	sword.ShapeOffsets = [Vector2i(0, 0), Vector2i(1, 0)] # 2x1 horizontal
+	sword.StarOffsets = [Vector2i(-1, 0), Vector2i(2, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 1)]
+	sword.StarSynergyBonusPerLink = 0.20
 	sword.Damage = 8.0
 	sword.Cooldown = 1.4
 	sword.BasePrice = 8
+	sword.SynergyDescription = "Star Link: +20% Cooldown & Damage per adjacent item!"
 	test_items.append(sword)
 
 	# Item 3: Mouth Gag (Toy, Head zone)
@@ -124,8 +130,11 @@ func _setup_test_items() -> void:
 	gag.Category = 1 # Toy
 	gag.RequiredZone = 1 # Head
 	gag.ShapeOffsets = [Vector2i(0, 0)] # 1x1
-	gag.PleasureGain = 0.3 # Reduced from 1.0
+	gag.StarOffsets = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)]
+	gag.StarSynergyBonusPerLink = 0.20
+	gag.PleasureGain = 0.3
 	gag.BasePrice = 4
+	gag.SynergyDescription = "Star Link: +20% Pleasure per adjacent item!"
 	test_items.append(gag)
 
 	# Item 4: Leather Harness (Clothing, Chest zone)
@@ -135,8 +144,11 @@ func _setup_test_items() -> void:
 	harness.Category = 2 # Clothing
 	harness.RequiredZone = 2 # Chest
 	harness.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 0)] # L-shape
+	harness.StarOffsets = [Vector2i(-1, 0), Vector2i(2, 0), Vector2i(0, -1), Vector2i(0, 2)]
+	harness.StarSynergyBonusPerLink = 0.15
 	harness.ArmorBonus = 3.0
 	harness.BasePrice = 10
+	harness.SynergyDescription = "Star Link: +15% Armor per adjacent item!"
 	test_items.append(harness)
 
 	# Item 5: Poison Potion (Consumable)
@@ -148,6 +160,21 @@ func _setup_test_items() -> void:
 	poison.ShapeOffsets = [Vector2i(0, 0)]
 	poison.BasePrice = 3
 	test_items.append(poison)
+
+	# Item 6: Electric Whip (Weapon, 1x3 vertical)
+	var whip = load("res://src/core/ItemData.cs").new()
+	whip.Id = "wpn_whip"
+	whip.ItemName = "Electric Whip"
+	whip.Category = 0 # Weapon
+	whip.RequiredZone = 0 # General
+	whip.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(0, 2)] # 1x3 vertical
+	whip.StarOffsets = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(-1, 1), Vector2i(1, 1), Vector2i(-1, 2), Vector2i(1, 2), Vector2i(0, -1), Vector2i(0, 3)]
+	whip.StarSynergyBonusPerLink = 0.25
+	whip.Damage = 16.0
+	whip.Cooldown = 1.2
+	whip.BasePrice = 12
+	whip.SynergyDescription = "Star Link: +25% Attack Speed & Shock Damage per adjacent item!"
+	test_items.append(whip)
 
 	# Register a fusion recipe: Rusty Sword + Poison Potion = Poison Sword
 	var poison_sword = load("res://src/core/ItemData.cs").new()
@@ -174,7 +201,7 @@ func _setup_test_items() -> void:
 	vibrating_sword.RequiredZone = 0 # General
 	vibrating_sword.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1)] # 1x2 vertical
 	vibrating_sword.Damage = 12.0
-	vibrating_sword.PleasureGain = 0.5 # Reduced to 1/3
+	vibrating_sword.PleasureGain = 0.5
 	vibrating_sword.Cooldown = 1.0
 	vibrating_sword.BasePrice = 18
 	vibrating_sword.SynergyDescription = "Deals damage and increases pleasure simultaneously."
@@ -184,9 +211,30 @@ func _setup_test_items() -> void:
 	recipe2.ComponentB = dildo
 	recipe2.Result = vibrating_sword
 
+	# Register a fusion recipe: Electric Whip + Vibrator = Thunder Vibrating Whip
+	var thunder_whip = load("res://src/core/ItemData.cs").new()
+	thunder_whip.Id = "wpn_thunder_whip"
+	thunder_whip.ItemName = "Thunder Vibrating Whip"
+	thunder_whip.Category = 0 # Weapon
+	thunder_whip.RequiredZone = 0 # General
+	thunder_whip.ShapeOffsets = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(0, 2)]
+	thunder_whip.StarOffsets = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(-1, 1), Vector2i(1, 1), Vector2i(-1, 2), Vector2i(1, 2), Vector2i(0, -1), Vector2i(0, 3)]
+	thunder_whip.StarSynergyBonusPerLink = 0.30
+	thunder_whip.Damage = 24.0
+	thunder_whip.PleasureGain = 0.75
+	thunder_whip.Cooldown = 0.9
+	thunder_whip.BasePrice = 24
+	thunder_whip.SynergyDescription = "Star Link: +30% Speed, Damage & Pleasure per adjacent item!"
+
+	var recipe3 = load("res://src/core/FusionRecipe.cs").new()
+	recipe3.ComponentA = whip
+	recipe3.ComponentB = dildo
+	recipe3.Result = thunder_whip
+
 	if InventoryManager.Recipes.size() == 0:
 		InventoryManager.Recipes.append(recipe)
 		InventoryManager.Recipes.append(recipe2)
+		InventoryManager.Recipes.append(recipe3)
 
 func _on_gold_changed(new_gold: int) -> void:
 	gold_label.text = "GOLD: %d" % new_gold

@@ -204,7 +204,8 @@ namespace Orclimax.Autoload
                 if (inst == null) continue;
 
                 float ratio = Math.Max(0.05f, inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid));
-                float effectiveCooldown = Math.Max(0.2f, inst.Item.Cooldown / (AttackSpeed * ratio));
+                float starMult = inst.GetStarSynergyMultiplier(InventoryManager.Instance.BackpackGrid);
+                float effectiveCooldown = Math.Max(0.15f, inst.Item.Cooldown / (AttackSpeed * ratio * starMult));
 
                 float timer = _weaponTimers[id] + (float)delta * _itemSpeedBuffMultiplier;
                 if (timer >= effectiveCooldown)
@@ -227,7 +228,8 @@ namespace Orclimax.Autoload
         {
             ItemData weapon = inst.Item;
             float ratio = Math.Max(0.05f, inst.GetActiveRatio(InventoryManager.Instance.BackpackGrid));
-            float finalDamage = weapon.Damage * ratio;
+            float starMult = inst.GetStarSynergyMultiplier(InventoryManager.Instance.BackpackGrid);
+            float finalDamage = weapon.Damage * ratio * starMult;
             EmitSignal(SignalName.WeaponFired, weapon.Id, finalDamage);
 
             // Attacking also performs lower body action, which increases pleasure!
