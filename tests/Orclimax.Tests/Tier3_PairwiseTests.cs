@@ -1,6 +1,8 @@
 using System;
 using NUnit.Framework;
 using Orclimax.Autoload;
+using Orclimax.Core;
+using GameConfig = Orclimax.Tests.GameConfig;
 
 namespace Orclimax.Tests
 {
@@ -10,44 +12,41 @@ namespace Orclimax.Tests
         [SetUp]
         public void Setup()
         {
-            GameConfig.Instance.BaseGravity = 980.0f;
-            GameConfig.Instance.BaseJumpVelocity = -550.0f;
-            GameConfig.Instance.BaseMoveSpeed = 250.0f;
-            GameConfig.Instance.DoubleTapDelay = 0.25f;
-            GameConfig.Instance.DashSpeedMultiplier = 2.8f;
-            GameConfig.Instance.DashDuration = 0.15f;
-            GameConfig.Instance.DashIFrameDuration = 0.18f;
-            GameConfig.Instance.DashCooldown = 0.6f;
-            GameConfig.Instance.ParryWindowDuration = 0.22f;
-            GameConfig.Instance.ParryCounterDamage = 15.0f;
-            GameConfig.Instance.ParryReflectSpeed = 700.0f;
-            GameConfig.Instance.ParryCooldown = 1.0f;
-            GameConfig.Instance.ThrustKnockbackRadius = 140.0f;
-            GameConfig.Instance.ThrustKnockbackForce = 450.0f;
-            GameConfig.Instance.ThrustPleasureBonus = 15.0f;
-            GameConfig.Instance.ThrustCooldown = 1.2f;
-            GameConfig.Instance.VesselReclaimRadius = 60.0f;
-            GameConfig.Instance.ShieldEnemyPhysArmorRatio = 0.75f;
-            GameConfig.Instance.ShieldEnemyMagicDamageMultiplier = 2.0f;
+            GameConfig.BaseGravity = 980.0f;
+            GameConfig.BaseJumpVelocity = -550.0f;
+            GameConfig.BaseMoveSpeed = 250.0f;
+            GameConfig.DoubleTapDelay = 0.25f;
+            GameConfig.DashSpeedMultiplier = 2.8f;
+            GameConfig.DashDuration = 0.15f;
+            GameConfig.DashIFrameDuration = 0.18f;
+            GameConfig.DashCooldown = 0.6f;
+            GameConfig.ParryWindowDuration = 0.22f;
+            GameConfig.ParryCounterDamage = 15.0f;
+            GameConfig.ParryReflectSpeed = 700.0f;
+            GameConfig.ParryCooldown = 1.0f;
+            GameConfig.ThrustKnockbackRadius = 140.0f;
+            GameConfig.ThrustKnockbackForce = 450.0f;
+            GameConfig.ThrustPleasureBonus = 15.0f;
+            GameConfig.ThrustCooldown = 1.2f;
+            GameConfig.VesselReclaimRadius = 60.0f;
+            GameConfig.ShieldEnemyPhysArmorRatio = 0.75f;
+            GameConfig.ShieldEnemyMagicDamageMultiplier = 2.0f;
         }
 
         [Test]
         public void R1_R4_Pairwise_CustomGameConfigStateTransition()
         {
-            // R4 config customization combined with R1 state navigation flow
             int customInitialGold = 50;
             int customStageClearGold = 25;
 
             GameState state = GameState.Title;
             int gold = customInitialGold;
 
-            // Transition: Title -> VesselSelect -> Backpack -> Combat -> Victory -> AdvanceStage
             state = GameState.VesselSelect;
             state = GameState.Backpack;
             state = GameState.Combat;
 
-            // Advance stage
-            int currentStage = 1 + 1; // Stage 2
+            int currentStage = 1 + 1;
             gold += customStageClearGold;
             state = GameState.WorldMap;
 
@@ -59,17 +58,15 @@ namespace Orclimax.Tests
         [Test]
         public void R2_R3_Pairwise_DisarmedPlayer_ParryReflectRangedProjectile()
         {
-            // R2 VesselSnatcher disarm state combined with R3 Double-Tap Parry
             bool isDisarmed = true;
             bool doubleTapUpPressed = true;
             float inputInterval = 0.15f;
 
-            bool isParryActive = doubleTapUpPressed && (inputInterval <= GameConfig.Instance.DoubleTapDelay);
+            bool isParryActive = doubleTapUpPressed && (inputInterval <= GameConfig.DoubleTapDelay);
             float projectileDamage = 20.0f;
 
-            // When disarmed, player cannot fire Orc weapons, but CAN parry projectiles
             float OrcWeaponDamageMultiplier = isDisarmed ? 0.0f : 1.0f;
-            float reflectedDamage = isParryActive ? GameConfig.Instance.ParryCounterDamage : 0.0f;
+            float reflectedDamage = isParryActive ? GameConfig.ParryCounterDamage : 0.0f;
             float damageTaken = isParryActive ? 0.0f : projectileDamage;
 
             Assert.That(OrcWeaponDamageMultiplier, Is.EqualTo(0.0f));
@@ -81,15 +78,14 @@ namespace Orclimax.Tests
         [Test]
         public void R2_R4_Pairwise_ShieldedEnemy_CustomMagicMultiplier()
         {
-            // R4 custom parameterization combined with R2 Shielded Enemy calculation
-            GameConfig.Instance.ShieldEnemyPhysArmorRatio = 0.80f;
-            GameConfig.Instance.ShieldEnemyMagicDamageMultiplier = 3.5f;
+            GameConfig.ShieldEnemyPhysArmorRatio = 0.80f;
+            GameConfig.ShieldEnemyMagicDamageMultiplier = 3.5f;
 
             float toyBaseDamage = 30.0f;
             float physicalBaseDamage = 30.0f;
 
-            float physTaken = physicalBaseDamage * (1.0f - GameConfig.Instance.ShieldEnemyPhysArmorRatio); // 30 * 0.20 = 6.0
-            float magicTaken = toyBaseDamage * GameConfig.Instance.ShieldEnemyMagicDamageMultiplier;       // 30 * 3.5 = 105.0
+            float physTaken = physicalBaseDamage * (1.0f - GameConfig.ShieldEnemyPhysArmorRatio);
+            float magicTaken = toyBaseDamage * GameConfig.ShieldEnemyMagicDamageMultiplier;
 
             Assert.That(physTaken, Is.EqualTo(6.0f).Within(0.001f));
             Assert.That(magicTaken, Is.EqualTo(105.0f).Within(0.001f));
@@ -98,9 +94,8 @@ namespace Orclimax.Tests
         [Test]
         public void R3_R1_Pairwise_HeavyThrustAOE_PleasureAccumulation_VesselMultiplier()
         {
-            // R3 Heavy Thrust AOE action combined with R1 Vessel sensitivity multiplier
-            float baseThrustPleasure = GameConfig.Instance.ThrustPleasureBonus; // 15.0
-            float vesselSensitivity = 0.5f;                             // +50% pleasure
+            float baseThrustPleasure = GameConfig.ThrustPleasureBonus;
+            float vesselSensitivity = 0.5f;
             float pleasureMultiplier = 1.0f + vesselSensitivity;
 
             float finalPleasureGain = baseThrustPleasure * pleasureMultiplier;
@@ -111,8 +106,7 @@ namespace Orclimax.Tests
         [Test]
         public void R1_R2_Pairwise_MapStageBranch_EnemySpawnTypeSelection()
         {
-            // R1 MapUI branch choice combined with R2 enemy composition
-            int selectedBranch = 2; // Branch 2: Airborne & Heavy Fortress path
+            int selectedBranch = 2;
             string enemyType1 = selectedBranch == 1 ? "RangedEnemy" : "FlyingEnemy";
             string enemyType2 = selectedBranch == 1 ? "SnatcherEnemy" : "ShieldedEnemy";
 

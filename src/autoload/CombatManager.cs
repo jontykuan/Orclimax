@@ -53,7 +53,7 @@ namespace Orclimax.Autoload
 
             // 2. Fetch base stats
             float baseMaxHp = 100f;
-            float baseMoveSpeed = GameConfig.Instance != null ? GameConfig.Instance.BaseMoveSpeed : 250f;
+            float baseMoveSpeed = GameConfig.Instance != null ? GameConfig.Instance.BaseMoveSpeed : 250.0f;
             float baseAttackSpeed = 1.5f;
             float baseArmor = 0f;
             float basePleasureRate = GameConfig.Instance != null ? GameConfig.Instance.DefaultPleasureRateMultiplier : 0.5f;
@@ -107,7 +107,7 @@ namespace Orclimax.Autoload
         public Godot.Collections.Dictionary GetCurrentStats()
         {
             float baseMaxHp = 100f;
-            float baseMoveSpeed = GameConfig.Instance != null ? GameConfig.Instance.BaseMoveSpeed : 250f;
+            float baseMoveSpeed = GameConfig.Instance != null ? GameConfig.Instance.BaseMoveSpeed : 250.0f;
             float baseAttackSpeed = 1.5f;
             float baseArmor = 0f;
             float basePleasureRate = GameConfig.Instance != null ? GameConfig.Instance.DefaultPleasureRateMultiplier : 0.5f;

@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using Orclimax.Autoload;
 using Orclimax.Core;
+using GameConfig = Orclimax.Tests.GameConfig;
 
 namespace Orclimax.Tests
 {
@@ -96,11 +97,11 @@ namespace Orclimax.Tests
             bool dashTriggered = doubleTapInterval <= GameConfig.DoubleTapDelay;
             Assert.That(dashTriggered, Is.True);
 
-            float moveDistance = GameConfig.BaseMoveSpeed * GameConfig.DashSpeedMultiplier * GameConfig.DashDuration; // 250 * 2.8 * 0.15 = 105
-            playerX += moveDistance; // 100 + 105 = 205.0f
+            float moveDistance = GameConfig.BaseMoveSpeed * GameConfig.DashSpeedMultiplier * GameConfig.DashDuration;
+            playerX += moveDistance;
 
             // 4. Check distance to detached vessel
-            float distanceToVessel = MathF.Abs(vesselX - playerX); // |250 - 205| = 45.0f
+            float distanceToVessel = MathF.Abs(vesselX - playerX);
             bool withinReclaimRadius = distanceToVessel <= GameConfig.VesselReclaimRadius;
 
             Assert.That(distanceToVessel, Is.EqualTo(45.0f));
@@ -135,8 +136,8 @@ namespace Orclimax.Tests
             Assert.That(reflectDamage, Is.EqualTo(15.0f));
 
             // 4. Player engages Shielded enemy -> Physical attacks suffer 75% reduction, Magic/Toy weapon deals 2x
-            float physDmgDealt = physicalWeaponDmg * (1.0f - GameConfig.ShieldEnemyPhysArmorRatio); // 40 * 0.25 = 10
-            float magicDmgDealt = magicToyWeaponDmg * GameConfig.ShieldEnemyMagicDamageMultiplier;    // 30 * 2.0 = 60
+            float physDmgDealt = physicalWeaponDmg * (1.0f - GameConfig.ShieldEnemyPhysArmorRatio);
+            float magicDmgDealt = magicToyWeaponDmg * GameConfig.ShieldEnemyMagicDamageMultiplier;
 
             Assert.That(physDmgDealt, Is.EqualTo(10.0f).Within(0.001f));
             Assert.That(magicDmgDealt, Is.EqualTo(60.0f).Within(0.001f));
