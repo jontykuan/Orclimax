@@ -46,12 +46,12 @@ func _process(delta: float) -> void:
 	stage_elapsed_time += delta
 	wave_timer += delta
 
-	# Every 30 seconds (at 30s, 60s, 90s, 120s), spawn a new wave before boss
-	if wave_timer >= wave_interval and stage_elapsed_time < 150.0:
+	# Every 30 seconds, spawn a new minion wave (capped at 9 enemies max)
+	if wave_timer >= wave_interval:
 		wave_timer = 0.0
 		_spawn_wave()
 
-	# At 150 seconds, Boss spawns!
+	# At 150 seconds, Boss spawns alongside minion waves!
 	if stage_elapsed_time >= 150.0 and not boss_spawned:
 		boss_spawned = true
 		_spawn_stage_boss()
@@ -64,7 +64,8 @@ func _spawn_wave() -> void:
 	if not stage_active or not player_node: return
 
 	wave_counter += 1
-	var num_enemies = 3 + (wave_counter - 1) * 2 # Wave 1: 3, Wave 2: 5, Wave 3: 7, Wave 4: 9, Wave 5: 11
+	# Wave size scales up, capped at 9 enemies maximum
+	var num_enemies = min(9, 3 + (wave_counter - 1) * 2)
 	
 	for i in range(num_enemies):
 		var spawn_left = randf() < 0.5

@@ -4,7 +4,7 @@ class_name EnemyRanged
 
 const ProjectileScene = preload("res://src/entities/weapons/Projectile.tscn")
 
-@export var shoot_cooldown: float = 2.5
+@export var shoot_cooldown: float = 3.5 # Lower throw attack speed (longer cooldown)
 var shoot_timer: float = 0.0
 
 func _ready() -> void:
@@ -37,29 +37,27 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _fire_ranged_attack() -> void:
-	# Randomly choose attack type: Parabolic (0), High Flat (1), or Low Flat (2)
+	# Randomly choose attack type: Parabolic Lob (0), High Flat (1), or Low Flat (2)
 	var type = randi() % 3
 	var dir = (target_player.global_position - global_position).normalized()
 	
 	match type:
-		0: # Parabolic lob shot (dodged by moving left/right)
+		0: # Parabolic lob shot (flight speed reduced, slightly higher damage)
 			var proj = ProjectileScene.instantiate() as Projectile
 			get_parent().add_child(proj)
 			proj.global_position = global_position + Vector2(0, -30)
-			# Setup parabolic trajectory velocity
-			var arc_vel = Vector2(dir.x * 350.0, -380.0)
-			proj.setup(6.0, arc_vel, 0.0, false)
+			# Reduced flight speed velocity trajectory
+			var arc_vel = Vector2(dir.x * 220.0, -260.0)
+			proj.setup(4.5, arc_vel, 0.0, false) # 4.5 dmg (higher than normal flat shot)
 			
-		1: # High Flat shot (must be dodged by crouching)
+		1: # High Flat shot (lower base damage: 2.0)
 			var proj = ProjectileScene.instantiate() as Projectile
 			get_parent().add_child(proj)
-			# Spawn at high height (head level)
 			proj.global_position = global_position + Vector2(0, -90)
-			proj.setup(5.0, Vector2(dir.x, 0), 450.0, false)
+			proj.setup(2.0, Vector2(dir.x, 0), 400.0, false)
 			
-		2: # Low Flat shot (must be dodged by jumping)
+		2: # Low Flat shot (lower base damage: 2.0)
 			var proj = ProjectileScene.instantiate() as Projectile
 			get_parent().add_child(proj)
-			# Spawn at low height (foot level)
 			proj.global_position = global_position + Vector2(0, -20)
-			proj.setup(5.0, Vector2(dir.x, 0), 450.0, false)
+			proj.setup(2.0, Vector2(dir.x, 0), 400.0, false)

@@ -41,11 +41,11 @@ namespace Orclimax.Autoload
         private static float _defaultDropChance = 0.25f;
 
         private static float _clawSlashCooldown = 1.5f;
-        private static float _clawSlashDamage = 3.0f;
+        private static float _clawSlashDamage = 1.5f;
         private static float _clawSlashRange = 110.0f;
 
         private static float _heavyCleaveCooldown = 4.0f;
-        private static float _heavyCleaveDamage = 8.0f;
+        private static float _heavyCleaveDamage = 3.5f;
         private static float _heavyCleaveRange = 130.0f;
 
         private static float _shieldEnemyPhysArmorRatio = 0.75f;

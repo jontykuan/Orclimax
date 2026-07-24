@@ -8,6 +8,10 @@ func _ready() -> void:
 	hp = max_hp
 	speed = 45.0 # Slow movement
 	sprite.color = Color(0.3, 0.4, 0.6) # Steel blue shield color
+	
+	# Lower Shield enemy attack damage (50% reduction)
+	for action in actions:
+		action.damage *= 0.5
 
 func take_damage_type(amount: float, is_magic: bool) -> void:
 	var final_damage = amount
