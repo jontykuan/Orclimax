@@ -124,7 +124,7 @@ func _setup_test_items() -> void:
 	gag.Category = 1 # Toy
 	gag.RequiredZone = 1 # Head
 	gag.ShapeOffsets = [Vector2i(0, 0)] # 1x1
-	gag.PleasureGain = 1.0
+	gag.PleasureGain = 0.3 # Reduced from 1.0
 	gag.BasePrice = 4
 	test_items.append(gag)
 

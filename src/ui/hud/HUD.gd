@@ -49,9 +49,14 @@ func update_stage_timer(remaining_seconds: float) -> void:
 	var secs = total_sec % 60
 	timer_label.text = "TIME LEFT: %02d:%02d" % [mins, secs]
 
-func show_wave_warning(is_warning: bool) -> void:
-	if warning_label:
-		warning_label.visible = is_warning
+func update_wave_warning(seconds_until_wave: float) -> void:
+	if not warning_label: return
+	if seconds_until_wave <= 5.0 and seconds_until_wave > 0.0:
+		var sec_display = int(ceil(seconds_until_wave))
+		warning_label.text = "[WARNING] ENEMY WAVE APPROACHING IN %ds!" % sec_display
+		warning_label.visible = true
+	else:
+		warning_label.visible = false
 
 func _process(_delta: float) -> void:
 	var player = get_tree().get_first_node_in_group("player")
@@ -150,12 +155,22 @@ func _on_climax_triggered(_female_id: String, skill_name: String) -> void:
 	tween.tween_interval(0.8) # Show H-climax screen brief moment
 	tween.tween_property(climax_overlay, "visible", false, 0.25)
 	
-	# Deal massive climax magic damage to all enemies currently on screen!
-	var blast_dmg: float = GameConfig.ClimaxBlastDamage if GameConfig else 50.0
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	for enemy in enemies:
-		if enemy.has_method("take_damage"):
-			enemy.take_damage(blast_dmg)
+	# Trigger specific climax visual/combat effects based on active female_id!
+	if female_id == "girl_lydia":
+		# Lydia: Lightning Cascade dealing area damage to all screen enemies
+		var blast_dmg: float = GameConfig.ClimaxBlastDamage if GameConfig else 50.0
+		var enemies = get_tree().get_nodes_in_group("enemies")
+		for enemy in enemies:
+			if is_instance_valid(enemy) and enemy.has_method("take_damage"):
+				enemy.take_damage(blast_dmg)
+	elif female_id == "girl_cynthia":
+		# Cynthia: Windstorm Arrow dealing physical area damage
+		var blast_dmg: float = 45.0
+		var enemies = get_tree().get_nodes_in_group("enemies")
+		for enemy in enemies:
+			if is_instance_valid(enemy) and enemy.has_method("take_damage"):
+				enemy.take_damage(blast_dmg)
+	# Maye ("girl_maye") grants 120% item speed boost for 0.8s via CombatManager, NO screen wipe!
 
 func _on_game_state_changed(new_state: int) -> void:
 	if new_state == 5: # GameState.GameOver

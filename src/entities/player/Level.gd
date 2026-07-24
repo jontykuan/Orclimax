@@ -66,8 +66,9 @@ func _process(delta: float) -> void:
 	var time_remaining = max(0.0, stage_duration - stage_elapsed_time)
 	if hud_node:
 		hud_node.update_stage_timer(time_remaining)
-		# Show warning 5 seconds before next minion wave (wave_timer >= 25s)
-		hud_node.show_wave_warning(wave_timer >= (wave_interval - 5.0))
+		# Update dynamic 5s-1s wave countdown warning
+		var time_until_wave = max(0.0, wave_interval - wave_timer)
+		hud_node.update_wave_warning(time_until_wave)
 
 	# Every 30 seconds, spawn a new minion wave (capped at 9 enemies max)
 	if wave_timer >= wave_interval:

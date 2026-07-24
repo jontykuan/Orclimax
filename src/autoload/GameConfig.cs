@@ -30,7 +30,7 @@ namespace Orclimax.Autoload
         private static Vector2 _knockbackForce = new Vector2(300.0f, -150.0f);
         private static float _heavyThrustKnockbackForce = 450.0f;
         private static float _thrustKnockbackRadius = 140.0f;
-        private static float _thrustPleasureGain = 15.0f;
+        private static float _thrustPleasureGain = 3.0f; // Reduced from 15.0 to prevent overly frequent climaxes
         private static float _thrustCooldown = 1.2f;
         private static float _climaxBlastDamage = 50.0f;
 
