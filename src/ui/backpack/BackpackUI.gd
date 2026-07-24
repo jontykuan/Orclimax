@@ -192,7 +192,7 @@ func _setup_vessels() -> void:
 	vessel1.CharacterName = "Elven Mage Lydia"
 	vessel1.ClimaxSkillName = "Lightning Cascade"
 	vessel1.BaseMaxPleasure = 100.0
-	vessel1.PleasureBuildRateMultiplier = 1.0
+	vessel1.PleasureBuildRateMultiplier = 0.5
 	vessel1.HeadCells = [Vector2i(2, 0), Vector2i(2, 1)]
 	vessel1.ChestCells = [Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2)]
 	vessel1.GroinCells = [Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3), Vector2i(2, 4)]
@@ -209,7 +209,7 @@ func _setup_vessels() -> void:
 	vessel2.CharacterName = "Elven Archer Cynthia"
 	vessel2.ClimaxSkillName = "Windstorm Arrow"
 	vessel2.BaseMaxPleasure = 120.0
-	vessel2.PleasureBuildRateMultiplier = 1.2
+	vessel2.PleasureBuildRateMultiplier = 0.6
 	vessel2.HeadCells = [Vector2i(2, 0)]
 	vessel2.ChestCells = [Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1)]
 	vessel2.GroinCells = [Vector2i(2, 2), Vector2i(2, 3)]
@@ -448,7 +448,7 @@ func _refresh_shop() -> void:
 
 		var name_lbl = Label.new()
 		if shop_slots_locked[i]:
-			name_lbl.text = "🔒 " + item.ItemName
+			name_lbl.text = "[LOCKED] " + item.ItemName
 		else:
 			name_lbl.text = item.ItemName
 		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -674,37 +674,37 @@ func _on_item_hovered(item: Resource) -> void:
 		5: zone_str = "Inactive (無效/過渡)"
 		
 	var body = ""
-	body += "[color=#aaaaaa]Type:[/color] %s\n" % cat_str
-	body += "[color=#aaaaaa]Required Zone:[/color] %s\n" % zone_str
-	body += "[color=#aaaaaa]Base Price:[/color] [color=#f5c651]%d G[/color]\n\n" % item.BasePrice
+	body += "[color=#94a3b8]Type:[/color] %s\n" % cat_str
+	body += "[color=#94a3b8]Required Zone:[/color] %s\n" % zone_str
+	body += "[color=#94a3b8]Base Price:[/color] [color=#f59e0b]%d G[/color]\n\n" % item.BasePrice
 	
 	var stats_added = false
 	if item.Damage > 0:
-		body += "[color=#ff5555]⚔️ Damage:[/color] %.1f\n" % item.Damage
+		body += "[color=#f87171]Damage:[/color] %.1f\n" % item.Damage
 		stats_added = true
 	if item.Cooldown > 0 and int(item.Category) == 0:
-		body += "[color=#ff5555]⏱️ Cooldown:[/color] %.2fs\n" % item.Cooldown
+		body += "[color=#f87171]Cooldown:[/color] %.2fs\n" % item.Cooldown
 		stats_added = true
 	if item.ArmorBonus > 0:
-		body += "[color=#33b3ff]🛡️ Armor:[/color] +%.1f\n" % item.ArmorBonus
+		body += "[color=#38bdf8]Armor:[/color] +%.1f\n" % item.ArmorBonus
 		stats_added = true
 	if item.SpeedBonus > 0:
-		body += "[color=#ff9933]👟 Speed:[/color] +%.1f\n" % item.SpeedBonus
+		body += "[color=#fb923c]Speed:[/color] +%.1f\n" % item.SpeedBonus
 		stats_added = true
 	if item.AttackSpeedBonus > 0:
-		body += "[color=#ffd933]⚡ Atk Speed:[/color] +%.1f%%\n" % (item.AttackSpeedBonus * 100.0)
+		body += "[color=#facc15]Atk Speed:[/color] +%.1f%%\n" % (item.AttackSpeedBonus * 100.0)
 		stats_added = true
 	if item.PleasureGain > 0:
-		body += "[color=#e633cc]💖 Pleasure Rate:[/color] +%.2f/s\n" % item.PleasureGain
+		body += "[color=#f472b6]Pleasure Rate:[/color] +%.2f/s\n" % item.PleasureGain
 		stats_added = true
 		
 	if stats_added:
 		body += "\n"
 		
 	if item.SynergyDescription != "":
-		body += "[color=#80ffdf]Effect:[/color]\n%s" % item.SynergyDescription
+		body += "[color=#34d399]Effect:[/color]\n%s" % item.SynergyDescription
 	else:
-		body += "[color=#aaaaaa]No additional effect description.[/color]"
+		body += "[color=#64748b]No additional effect description.[/color]"
 		
 	desc_text.text = body
 

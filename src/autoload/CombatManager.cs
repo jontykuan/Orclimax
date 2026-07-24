@@ -56,7 +56,7 @@ namespace Orclimax.Autoload
             float baseMoveSpeed = 250f;
             float baseAttackSpeed = 1.5f;
             float baseArmor = 0f;
-            float basePleasureRate = 1.0f;
+            float basePleasureRate = 0.5f;
 
             if (InventoryManager.Instance.CurrentVessel != null)
             {
@@ -110,7 +110,7 @@ namespace Orclimax.Autoload
             float baseMoveSpeed = 250f;
             float baseAttackSpeed = 1.5f;
             float baseArmor = 0f;
-            float basePleasureRate = 1.0f;
+            float basePleasureRate = 0.5f;
             float maxPleasure = 100f;
 
             if (InventoryManager.Instance.CurrentVessel != null)

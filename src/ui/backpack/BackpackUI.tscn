@@ -255,11 +255,11 @@ theme_override_constants/margin_top = 5
 [node name="HelpLabel" type="RichTextLabel" parent="MainLayout/HelpArea"]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.7, 0.7, 0.8, 1)
-theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
-text = "[center]💡 [color=#f5c651]Fusion Guide[/color]: Place compatible items adjacently on the grid; they will automatically combine after you pass a combat stage! (e.g. Rusty Sword + Poison Potion = Poison Sword, Rusty Sword + Vibrator = Vibrating Sword)
-Drag items to the [color=#f5c651]Shop[/color] to sell them for 50% gold, or drag to the [color=#4ade80]Stash[/color] to unequip.
-🖥️ [color=#4ade80]Screen Size[/color]: Press [color=#f5c651]F1[/color] (Small 800x600), [color=#f5c651]F2[/color] (Large 1600x1200), or [color=#f5c651]F3/F11[/color] (Fullscreen) to toggle window sizes.[/center]"
+text = "[center][color=#f59e0b]FUSION GUIDE[/color]: Place compatible items adjacently on the grid to combine after combat stages!
+Drag items to [color=#f59e0b]Shop[/color] to sell (50% Gold), or to [color=#4ade80]Stash[/color] to unequip.
+[color=#38bdf8]SCREEN SHORTCUTS[/color]: Press [color=#f59e0b]F1[/color] (800x600), [color=#f59e0b]F2[/color] (1600x1200), or [color=#f59e0b]F3/F11[/color] (Fullscreen).[/center]"
 fit_content = true
 
 [connection signal="pressed" from="MainLayout/Header/StartCombatButton" to="." method="_on_start_combat_pressed"]
