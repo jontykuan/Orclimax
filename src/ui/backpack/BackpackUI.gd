@@ -9,11 +9,8 @@ const ItemUIScene = preload("res://src/ui/backpack/ItemUI.tscn")
 @onready var stash_container: HFlowContainer = $MainLayout/HBox/StashArea/ScrollContainer/StashContainer
 @onready var shop_container: HBoxContainer = $MainLayout/ShopArea/ShopItems
 @onready var gold_label: Label = $MainLayout/Header/GoldLabel
-@onready var stage_label: Label = $MainLayout/Header/StageLabel
 @onready var female_title_label: Label = $MainLayout/HBox/GridArea/VesselTitle
 @onready var reroll_button: Button = $MainLayout/ShopArea/ShopHeader/RerollButton
-@onready var vessel_option: OptionButton = $MainLayout/VesselSelection/VesselOption
-@onready var keep_equip_checkbox: CheckBox = $MainLayout/VesselSelection/KeepEquipCheckBox
 
 @onready var hp_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/HPLabel
 @onready var armor_label: Label = $MainLayout/HBox/StatsArea/StatsPanel/Margin/VBox/ArmorLabel
@@ -70,11 +67,7 @@ func _ready() -> void:
 	# 2. Setup mock test items
 	_setup_test_items()
 
-	# 3. Initialize default vessels and dropdown selection
-	_setup_vessels()
-	keep_equip_checkbox.toggle_mode = true
-
-	# 4. Initial UI draws
+	# 3. Initial UI draws
 	# Connect reroll button
 	if reroll_button:
 		reroll_button.pressed.connect(_on_reroll_pressed)
@@ -186,88 +179,13 @@ func _setup_test_items() -> void:
 		InventoryManager.Recipes.append(recipe)
 		InventoryManager.Recipes.append(recipe2)
 
-var available_vessels: Array[Resource] = []
-
-func _setup_vessels() -> void:
-	available_vessels.clear()
-
-	# Create Vessel 1 (Lydia)
-	# Upper and lower body cells are widely connected (Chest has adjacent groin cells directly below each of them)
-	var vessel1 = load("res://src/core/VesselData.cs").new()
-	vessel1.Id = "girl_lydia"
-	vessel1.CharacterName = "Elven Mage Lydia"
-	vessel1.ClimaxSkillName = "Lightning Cascade"
-	vessel1.BaseMaxPleasure = 100.0
-	vessel1.PleasureBuildRateMultiplier = 0.5
-	vessel1.HeadCells = [Vector2i(2, 0), Vector2i(2, 1)]
-	vessel1.ChestCells = [Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2)]
-	vessel1.GroinCells = [Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3), Vector2i(2, 4)]
-	vessel1.LimbsCells = [Vector2i(0, 2), Vector2i(4, 2), Vector2i(1, 5), Vector2i(3, 5)]
-	vessel1.GeneralCells = [Vector2i(2, 5)]
-	vessel1.InactiveCells = [Vector2i(0, 3), Vector2i(4, 3), Vector2i(0, 4), Vector2i(1, 4), Vector2i(3, 4), Vector2i(4, 4)]
-	vessel1.InitiallyLockedCells = [Vector2i(2, 4), Vector2i(3, 5)]
-	available_vessels.append(vessel1)
-
-	# Create Vessel 2 (Cynthia)
-	# Completely different layout: wider upper shoulder cells, narrow vertical core groin layout
-	var vessel2 = load("res://src/core/VesselData.cs").new()
-	vessel2.Id = "girl_cynthia"
-	vessel2.CharacterName = "Elven Archer Cynthia"
-	vessel2.ClimaxSkillName = "Windstorm Arrow"
-	vessel2.BaseMaxPleasure = 120.0
-	vessel2.PleasureBuildRateMultiplier = 0.6
-	vessel2.HeadCells = [Vector2i(2, 0)]
-	vessel2.ChestCells = [Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1)]
-	vessel2.GroinCells = [Vector2i(2, 2), Vector2i(2, 3)]
-	vessel2.LimbsCells = [Vector2i(0, 1), Vector2i(4, 1), Vector2i(0, 2), Vector2i(4, 2)]
-	vessel2.GeneralCells = [Vector2i(1, 2), Vector2i(3, 2)]
-	vessel2.InactiveCells = [Vector2i(0, 3), Vector2i(1, 3), Vector2i(3, 3), Vector2i(4, 3), Vector2i(2, 4)]
-	vessel2.InitiallyLockedCells = [Vector2i(0, 2), Vector2i(4, 2)]
-	available_vessels.append(vessel2)
-
-	# Add to option selection list
-	vessel_option.clear()
-	for v in available_vessels:
-		vessel_option.add_item(v.CharacterName)
-
-	if not vessel_option.item_selected.is_connected(_on_vessel_option_selected):
-		vessel_option.item_selected.connect(_on_vessel_option_selected)
-
-	var active_v = InventoryManager.CurrentVessel
-	if active_v == null:
-		InventoryManager.SetVessel(available_vessels[0], false)
-		vessel_option.selected = 0
-	else:
-		# Match current selection
-		for idx in range(available_vessels.size()):
-			if available_vessels[idx].Id == active_v.Id:
-				vessel_option.selected = idx
-				break
-
-func _on_vessel_option_selected(index: int) -> void:
-	var selected_vessel = available_vessels[index]
-	var keep_equip = keep_equip_checkbox.button_pressed
-	var current_grid = InventoryManager.BackpackGrid
-	var before_count = 0
-	if current_grid:
-		before_count = current_grid.PlacedItems.size()
-	
-	print("GDScript: selected Vessel index: ", index, " keep_equip: ", keep_equip, " Placed items count before: ", before_count)
-	InventoryManager.SetVessel(selected_vessel, keep_equip)
-	
-	var after_grid = InventoryManager.BackpackGrid
-	var after_count = 0
-	if after_grid:
-		after_count = after_grid.PlacedItems.size()
-	print("GDScript: Switch done. New vessel items count: ", after_count)
-
 func _on_gold_changed(new_gold: int) -> void:
 	gold_label.text = "GOLD: %d" % new_gold
 	if current_shop_items.size() > 0:
 		_refresh_shop()
 
 func _on_stage_changed(new_stage: int) -> void:
-	stage_label.text = "STAGE: %d" % new_stage
+	pass
 
 func _on_vessel_changed(vessel: Resource) -> void:
 	if vessel == null: return

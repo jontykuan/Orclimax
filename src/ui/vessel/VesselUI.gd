@@ -125,7 +125,7 @@ func _populate_vessel_list() -> void:
 			if first_unlocked_vessel == null:
 				first_unlocked_vessel = v
 		else:
-			btn.text = "[LOCKED] ??? (未解放)"
+			btn.text = "[LOCKED]"
 			btn.disabled = true
 		btn.custom_minimum_size = Vector2(240, 44)
 		vessel_list_container.add_child(btn)

@@ -37,20 +37,15 @@ theme_override_constants/separation = 15
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="StageLabel" type="Label" parent="MainLayout/Header"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "STAGE: 1"
-
-[node name="Spacer" type="Control" parent="MainLayout/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="GoldLabel" type="Label" parent="MainLayout/Header"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.976471, 0.811765, 0.317647, 1)
 theme_override_font_sizes/font_size = 20
 text = "GOLD: 15"
+
+[node name="Spacer" type="Control" parent="MainLayout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="ToVesselButton" type="Button" parent="MainLayout/Header"]
 layout_mode = 2
@@ -61,28 +56,6 @@ text = "BACK TO VESSEL (返回載體)"
 layout_mode = 2
 custom_minimum_size = Vector2(160, 40)
 text = "TO WORLD MAP (前往地圖)"
-
-
-
-[node name="VesselSelection" type="HBoxContainer" parent="MainLayout"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Label" type="Label" parent="MainLayout/VesselSelection"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Switch Vessel: "
-
-[node name="VesselOption" type="OptionButton" parent="MainLayout/VesselSelection"]
-layout_mode = 2
-custom_minimum_size = Vector2(180, 30)
-
-[node name="KeepEquipCheckBox" type="CheckBox" parent="MainLayout/VesselSelection"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-toggle_mode = true
-button_pressed = true
-text = "Keep Equipped Items (保留裝備)"
 
 [node name="HBox" type="HBoxContainer" parent="MainLayout"]
 layout_mode = 2
