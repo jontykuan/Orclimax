@@ -141,7 +141,7 @@ func _update_pip_expression(ratio: float) -> void:
 	else:
 		expression_label.text = "Expression: Intense Ecstasy / Blurry Eyes"
 
-func _on_climax_triggered(_female_id: String, skill_name: String) -> void:
+func _on_climax_triggered(female_id: String, skill_name: String) -> void:
 	# Show Street Fighter style background H-CG / Climax Cut-in
 	var vessel_name = "Vessel"
 	if InventoryManager.CurrentVessel != null:
