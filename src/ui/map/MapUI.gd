@@ -52,6 +52,10 @@ func _on_node_selected(id: String, title: String, desc: String) -> void:
 	selected_node_id = id
 	var is_cleared = GameManager.ClearedStageIds.has(id)
 	node_title_lbl.text = title + (" [CLEARED / 已攻略]" if is_cleared else " [AVAILABLE / 可攻略]")
+	if is_cleared:
+		node_title_lbl.add_theme_color_override("font_color", Color(0.3, 0.95, 0.3)) # Green for cleared
+	else:
+		node_title_lbl.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65)) # Gray for uncleared
 	node_desc_lbl.text = desc
 	_update_node_visuals()
 
@@ -61,12 +65,22 @@ func _update_node_visuals() -> void:
 	# Update Flame Spire Node button text & status
 	var flame_cleared = cleared_ids.has("flame_spire")
 	btn_stage1.text = ("[CLEARED]\nFlame Spire" if flame_cleared else "[AVAILABLE]\nFlame Spire")
-	btn_stage1.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "flame_spire" else Color(1, 1, 1)
+	if flame_cleared:
+		btn_stage1.add_theme_color_override("font_color", Color(0.3, 0.95, 0.3)) # Green for cleared
+		btn_stage1.self_modulate = Color(0.4, 0.95, 0.4) if selected_node_id == "flame_spire" else Color(0.7, 1.0, 0.7)
+	else:
+		btn_stage1.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65)) # Gray for uncleared
+		btn_stage1.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "flame_spire" else Color(0.7, 0.7, 0.7)
 
 	# Update Tale Breeze Node button text & status
 	var breeze_cleared = cleared_ids.has("tale_breeze")
 	btn_stage2a.text = ("[CLEARED]\nTale Breeze" if breeze_cleared else "[AVAILABLE]\nTale Breeze")
-	btn_stage2a.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "tale_breeze" else Color(1, 1, 1)
+	if breeze_cleared:
+		btn_stage2a.add_theme_color_override("font_color", Color(0.3, 0.95, 0.3)) # Green for cleared
+		btn_stage2a.self_modulate = Color(0.4, 0.95, 0.4) if selected_node_id == "tale_breeze" else Color(0.7, 1.0, 0.7)
+	else:
+		btn_stage2a.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65)) # Gray for uncleared
+		btn_stage2a.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "tale_breeze" else Color(0.7, 0.7, 0.7)
 
 	btn_stage2b.visible = false
 	btn_stage3.visible = false

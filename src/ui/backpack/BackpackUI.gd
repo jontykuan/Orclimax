@@ -72,11 +72,17 @@ func _ready() -> void:
 	if reroll_button:
 		reroll_button.pressed.connect(_on_reroll_pressed)
 	
-	# Generate initial shop items only if current shop is empty (do NOT refresh when returning from map!)
-	if current_shop_items.size() == 0:
+	# Generate initial shop items only if current shop has no items (do NOT refresh when switching pages!)
+	var has_valid_shop = false
+	for item in current_shop_items:
+		if item != null:
+			has_valid_shop = true
+			break
+
+	if not has_valid_shop:
 		_generate_new_shop_items()
-	else:
-		_refresh_shop()
+	
+	_refresh_shop()
 
 	# Trigger automatic fusions (after battle, when reloading the camp/shop UI)
 	im.TriggerFusions()

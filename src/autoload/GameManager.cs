@@ -127,6 +127,10 @@ namespace Orclimax.Autoload
             Gold = GameConfig.Instance != null ? GameConfig.Instance.InitialGold : 15;
             CurrentStage = 1;
             ClearedStageIds.Clear();
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.CurrentShopItems.Clear();
+            }
             GoToVesselSelect();
         }
 
