@@ -16,6 +16,11 @@ class_name HUD
 @onready var return_button: Button = $VictoryPanel/VBox/ReturnButton
 @onready var victory_panel: PanelContainer = $VictoryPanel
 
+@onready var dodge_bar: ProgressBar = $TopLeft/CooldownHBox/DodgeCD/Bar
+@onready var parry_bar: ProgressBar = $TopLeft/CooldownHBox/ParryCD/Bar
+@onready var thrust_bar: ProgressBar = $TopLeft/CooldownHBox/ThrustCD/Bar
+@onready var buff_list: VBoxContainer = $TopRight/BuffVBox/BuffList
+
 func _ready() -> void:
 	# Hide climax and victory overlays initially
 	climax_overlay.visible = false
@@ -33,6 +38,52 @@ func _ready() -> void:
 	# Initial values
 	_on_hp_changed(cm.CurrentHp, cm.MaxHp)
 	_on_pleasure_changed(cm.CurrentPleasure, cm.MaxPleasure)
+
+func _process(_delta: float) -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if not player: return
+
+	# Update Cooldown Progress Bars (0 = ready/full bar, >0 = on cooldown)
+	var dash_max = player.dash_cooldown if player.dash_cooldown > 0 else 1.0
+	dodge_bar.value = (1.0 - (player.dash_cooldown_timer / dash_max)) * 100.0
+
+	var parry_max = GameConfig.ParryCooldown if GameConfig and GameConfig.ParryCooldown > 0 else 4.0
+	parry_bar.value = (1.0 - (player.parry_cooldown_timer / parry_max)) * 100.0
+
+	var thrust_max = GameConfig.ThrustCooldown if GameConfig and GameConfig.ThrustCooldown > 0 else 5.0
+	thrust_bar.value = (1.0 - (player.thrust_cooldown_timer / thrust_max)) * 100.0
+
+	# Update Active Passive Buffs
+	_update_buff_list(player)
+
+func _update_buff_list(player: Node2D) -> void:
+	for child in buff_list.get_children():
+		if is_instance_valid(child):
+			child.queue_free()
+
+	# 1. Maye Climax Item Speed Buff
+	if CombatManager.TempAttackSpeedMultiplierTimer > 0:
+		var lbl = Label.new()
+		lbl.text = "⚡ Temporal Surge (+150%% Speed): %.1fs" % CombatManager.TempAttackSpeedMultiplierTimer
+		lbl.add_theme_color_override("font_color", Color(0.96, 0.8, 0.2))
+		lbl.add_theme_font_size_override("font_size", 12)
+		buff_list.add_child(lbl)
+
+	# 2. Player Dash i-Frames
+	if player.get("is_dashing"):
+		var lbl = Label.new()
+		lbl.text = "🛡️ Evasion i-Frames Active"
+		lbl.add_theme_color_override("font_color", Color(0.3, 0.9, 0.9))
+		lbl.add_theme_font_size_override("font_size", 12)
+		buff_list.add_child(lbl)
+
+	# 3. Player Parry Guard Stance
+	if player.get("is_parrying"):
+		var lbl = Label.new()
+		lbl.text = "⚔️ Precise Counter Stance Active"
+		lbl.add_theme_color_override("font_color", Color(0.9, 0.3, 0.3))
+		lbl.add_theme_font_size_override("font_size", 12)
+		buff_list.add_child(lbl)
 
 func _on_hp_changed(current: float, max_val: float) -> void:
 	hp_bar.max_value = max_val

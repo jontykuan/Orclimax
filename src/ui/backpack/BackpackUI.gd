@@ -193,7 +193,7 @@ func _on_gold_changed(new_gold: int) -> void:
 	if current_shop_items.size() > 0:
 		_refresh_shop()
 
-func _on_stage_changed(new_stage: int) -> void:
+func _on_stage_changed(_new_stage: int) -> void:
 	pass
 
 func _on_vessel_changed(vessel: Resource) -> void:

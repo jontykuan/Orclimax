@@ -29,10 +29,10 @@ var last_press_up_time: float = -999.0
 var last_press_down_time: float = -999.0
 var DOUBLE_TAP_DELAY: float = 0.25
 
-# Action states & Cooldowns
 var parry_timer: float = 0.0
 var parry_cooldown_timer: float = 0.0
 var is_parrying: bool = false
+var pending_jump_timer: float = 0.0
 
 var thrust_cooldown_timer: float = 0.0
 var is_vessel_attached: bool = true
@@ -90,6 +90,13 @@ func _physics_process(delta: float) -> void:
 	if parry_cooldown_timer > 0: parry_cooldown_timer -= delta
 	if thrust_cooldown_timer > 0: thrust_cooldown_timer -= delta
 
+	# Handle Pending Jump Buffer Timer (lock jump to check if double-tap UP parry arrives)
+	if pending_jump_timer > 0:
+		pending_jump_timer -= delta
+		if pending_jump_timer <= 0:
+			if is_on_floor():
+				velocity.y = jump_velocity
+
 	# Handle Active Action Timers
 	if is_dashing:
 		dash_timer -= delta
@@ -108,12 +115,13 @@ func _physics_process(delta: float) -> void:
 func _handle_normal_movement(_delta: float) -> void:
 	var curr_time := Time.get_ticks_msec() / 1000.0
 
-	# 1. Double-Tap UP: Precise Guard / Parry
+	# 1. Double-Tap UP: Precise Guard / Parry vs Single-Tap: Jump Buffer
 	if Input.is_action_just_pressed("ui_up"):
 		if curr_time - last_press_up_time < DOUBLE_TAP_DELAY and parry_cooldown_timer <= 0:
+			pending_jump_timer = 0.0 # Cancel jump!
 			_start_parry()
 		elif is_on_floor():
-			velocity.y = jump_velocity
+			pending_jump_timer = DOUBLE_TAP_DELAY # Buffer jump to wait for potential double-tap
 		last_press_up_time = curr_time
 
 	# 2. Double-Tap DOWN: Heavy Thrust / AOE Knockback

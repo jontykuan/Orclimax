@@ -5,6 +5,90 @@
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
 
+[node name="TopLeft" type="MarginContainer" parent="."]
+anchors_preset = 0
+offset_right = 400.0
+offset_bottom = 80.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+
+[node name="CooldownHBox" type="HBoxContainer" parent="TopLeft"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="DodgeCD" type="VBoxContainer" parent="TopLeft/CooldownHBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Label" type="Label" parent="TopLeft/CooldownHBox/DodgeCD"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Dodge (L/R)"
+horizontal_alignment = 1
+
+[node name="Bar" type="ProgressBar" parent="TopLeft/CooldownHBox/DodgeCD"]
+custom_minimum_size = Vector2(60, 16)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="ParryCD" type="VBoxContainer" parent="TopLeft/CooldownHBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Label" type="Label" parent="TopLeft/CooldownHBox/ParryCD"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Parry (UP)"
+horizontal_alignment = 1
+
+[node name="Bar" type="ProgressBar" parent="TopLeft/CooldownHBox/ParryCD"]
+custom_minimum_size = Vector2(60, 16)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="ThrustCD" type="VBoxContainer" parent="TopLeft/CooldownHBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Label" type="Label" parent="TopLeft/CooldownHBox/ThrustCD"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Heavy (DOWN)"
+horizontal_alignment = 1
+
+[node name="Bar" type="ProgressBar" parent="TopLeft/CooldownHBox/ThrustCD"]
+custom_minimum_size = Vector2(60, 16)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="TopRight" type="MarginContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -350.0
+offset_bottom = 120.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+
+[node name="BuffVBox" type="VBoxContainer" parent="TopRight"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 0
+
+[node name="TitleLabel" type="Label" parent="TopRight/BuffVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 14
+text = "ACTIVE BUFF STATUS:"
+
+[node name="BuffList" type="VBoxContainer" parent="TopRight/BuffVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
 [node name="BottomLeft" type="MarginContainer" parent="."]
 anchors_preset = 2
 anchor_top = 1.0

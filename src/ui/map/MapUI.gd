@@ -3,7 +3,6 @@ extends Control
 @onready var stage_label: Label = $MainLayout/Header/StageTitle
 @onready var gold_label: Label = $MainLayout/Header/GoldLabel
 @onready var back_vessel_btn: Button = $MainLayout/Header/BackToVesselButton
-@onready var prep_btn: Button = $MainLayout/DetailPanel/Margin/DetailHBox/EnterPrepButton
 @onready var combat_btn: Button = $MainLayout/DetailPanel/Margin/DetailHBox/EnterCombatButton
 
 @onready var node_title_lbl: Label = $MainLayout/DetailPanel/Margin/DetailHBox/NodeInfo/NodeTitle
@@ -27,8 +26,6 @@ func _ready() -> void:
 
 	# Back button returns to Preparation (Backpack) phase!
 	back_vessel_btn.pressed.connect(func(): GameManager.GoToBackpack())
-	if prep_btn:
-		prep_btn.pressed.connect(func(): GameManager.GoToBackpack())
 	combat_btn.pressed.connect(func():
 		if not GameManager.ClearedStageIds.has(selected_node_id):
 			GameManager.CurrentSelectedStageId = selected_node_id
@@ -45,7 +42,7 @@ func _ready() -> void:
 func _on_gold_changed(gold: int) -> void:
 	gold_label.text = "GOLD: %d" % gold
 
-func _on_stage_changed(stage: int) -> void:
+func _on_stage_changed(_stage: int) -> void:
 	stage_label.text = "WORLD MAP (世界地圖)"
 
 func _on_node_selected(id: String, title: String, desc: String) -> void:

@@ -66,14 +66,17 @@ func _snatch_vessel() -> void:
 func _reclaim_vessel() -> void:
 	if not has_stolen_vessel: return
 	has_stolen_vessel = false
-	stolen_vessel_visual.visible = false
+	if stolen_vessel_visual: stolen_vessel_visual.visible = false
 	
 	if target_player and target_player.has_method("attach_vessel"):
 		target_player.attach_vessel()
 		
-	print("[Player] Vessel reclaimed!")
+	print("[Player] Vessel reclaimed! EnemySnatcher defeated!")
+	_die() # Snatcher dies immediately upon Orc reclaiming the Vessel!
 
 func _die() -> void:
 	if has_stolen_vessel:
-		_reclaim_vessel()
+		has_stolen_vessel = false
+		if target_player and target_player.has_method("attach_vessel"):
+			target_player.attach_vessel()
 	super._die()
