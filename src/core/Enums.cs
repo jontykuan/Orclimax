@@ -20,7 +20,8 @@ namespace Orclimax.Core
         Toy,         // Increases pleasure/climax generation
         Clothing,    // Modifies armor, stats, and climax damage
         Accessory,   // Passive stat buffs
-        Consumable   // Quick-use buffs or healing
+        Consumable,  // Quick-use buffs or healing
+        Graffiti     // Socketable gem-like runes attached to adjacent items
     }
 
     public enum GameState
