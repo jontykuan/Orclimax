@@ -47,7 +47,7 @@ var shop_slots_locked: Array:
 		InventoryManager.ShopSlotsLocked = val
 
 @onready var to_vessel_button: Button = $MainLayout/Header/ToVesselButton
-@onready var to_map_button: Button = $MainLayout/Header/ToMapButton
+@onready var to_map_button: Button = $MainLayout/ShopArea/ShopHeader/ToMapButton
 
 func _ready() -> void:
 	# 1. Load C# Singletons and connect signals
@@ -72,8 +72,11 @@ func _ready() -> void:
 	if reroll_button:
 		reroll_button.pressed.connect(_on_reroll_pressed)
 	
-	# Generate initial shop items (at the very beginning / start of scene load)
-	_generate_new_shop_items()
+	# Generate initial shop items only if current shop is empty (do NOT refresh when returning from map!)
+	if current_shop_items.size() == 0:
+		_generate_new_shop_items()
+	else:
+		_refresh_shop()
 
 	# Trigger automatic fusions (after battle, when reloading the camp/shop UI)
 	im.TriggerFusions()

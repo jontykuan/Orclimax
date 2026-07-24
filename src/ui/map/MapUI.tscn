@@ -161,11 +161,7 @@ theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
 theme_override_font_sizes/font_size = 14
 text = "Normal Combat - Basic enemies ahead"
 
-[node name="EnterPrepButton" type="Button" parent="MainLayout/DetailPanel/Margin/DetailHBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(180, 48)
-theme_override_font_sizes/font_size = 16
-text = "Backpack Prep (整備)"
+
 
 [node name="EnterCombatButton" type="Button" parent="MainLayout/DetailPanel/Margin/DetailHBox"]
 layout_mode = 2

@@ -47,12 +47,12 @@ func _create_vessel_data_objects() -> void:
 	v0.LimbsDevLevel = 1
 	v0.TraitsDescription = "Human maiden with high sensitivity (0.7x). Climax accelerates item triggers by 150% for 1.8s."
 	v0.HeadCells = [Vector2i(2, 0)]
-	v0.ChestCells = [Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1)]
-	v0.GroinCells = [Vector2i(2, 2), Vector2i(2, 3)]
-	v0.LimbsCells = [Vector2i(0, 1), Vector2i(4, 1), Vector2i(1, 4), Vector2i(3, 4)]
-	v0.GeneralCells = [Vector2i(1, 2), Vector2i(3, 2), Vector2i(2, 4)]
-	v0.InactiveCells = [Vector2i(0, 2), Vector2i(4, 2), Vector2i(0, 3), Vector2i(1, 3), Vector2i(3, 3), Vector2i(4, 3)]
-	v0.InitiallyLockedCells = [Vector2i(1, 4), Vector2i(3, 4)]
+	v0.ChestCells = [Vector2i(2, 1), Vector2i(2, 2)]
+	v0.GroinCells = [Vector2i(2, 3), Vector2i(2, 4)]
+	v0.LimbsCells = [Vector2i(0, 2), Vector2i(4, 2), Vector2i(0, 3), Vector2i(4, 3)]
+	v0.GeneralCells = [Vector2i(1, 2), Vector2i(3, 2), Vector2i(1, 3), Vector2i(3, 3)]
+	v0.InactiveCells = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(0, 1), Vector2i(4, 1), Vector2i(1, 4), Vector2i(3, 4)]
+	v0.InitiallyLockedCells = [Vector2i(0, 3), Vector2i(4, 3)]
 	available_vessels.append(v0)
 
 	# Vessel 1: Lydia (Unlocked via Stage 1 Boss: Flame Spire)

@@ -27,25 +27,26 @@ func _ready() -> void:
 
 	# Back button returns to Preparation (Backpack) phase!
 	back_vessel_btn.pressed.connect(func(): GameManager.GoToBackpack())
-	prep_btn.pressed.connect(func(): GameManager.GoToBackpack())
+	if prep_btn:
+		prep_btn.pressed.connect(func(): GameManager.GoToBackpack())
 	combat_btn.pressed.connect(func():
 		if not GameManager.ClearedStageIds.has(selected_node_id):
 			GameManager.CurrentSelectedStageId = selected_node_id
 			GameManager.StartCombatNode()
 	)
 
-	btn_stage1.pressed.connect(func(): _on_node_selected("flame_spire", "Stage 1: Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia (Unlocks Lydia)"))
-	btn_stage2a.pressed.connect(func(): _on_node_selected("tale_breeze", "Stage 2: Tale Breeze", "Enemies: Flat-shot Ranged, Parabolic Lob Ranged, Vessel Snatcher.\nBoss at 150s: Elven Archer Cynthia (Unlocks Cynthia)"))
-	btn_stage2b.pressed.connect(func(): _on_node_selected("flame_spire", "Stage 1: Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia"))
-	btn_stage3.pressed.connect(func(): _on_node_selected("tale_breeze", "Stage 2: Tale Breeze", "Enemies: Flat-shot Ranged, Parabolic Lob Ranged, Vessel Snatcher.\nBoss at 150s: Elven Archer Cynthia"))
+	btn_stage1.pressed.connect(func(): _on_node_selected("flame_spire", "Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia (Unlocks Lydia)"))
+	btn_stage2a.pressed.connect(func(): _on_node_selected("tale_breeze", "Tale Breeze", "Enemies: Flat-shot Ranged, Parabolic Lob Ranged, Vessel Snatcher.\nBoss at 150s: Elven Archer Cynthia (Unlocks Cynthia)"))
+	btn_stage2b.pressed.connect(func(): _on_node_selected("flame_spire", "Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia"))
+	btn_stage3.pressed.connect(func(): _on_node_selected("tale_breeze", "Tale Breeze", "Enemies: Flat-shot Ranged, Parabolic Lob Ranged, Vessel Snatcher.\nBoss at 150s: Elven Archer Cynthia"))
 
-	_on_node_selected("flame_spire", "Stage 1: Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia (Unlocks Lydia)")
+	_on_node_selected("flame_spire", "Flame Spire", "Enemies: Melee Infantry, Heavy Shield, Flat-shot Ranged.\nBoss at 150s: Elven Mage Lydia (Unlocks Lydia)")
 
 func _on_gold_changed(gold: int) -> void:
 	gold_label.text = "GOLD: %d" % gold
 
 func _on_stage_changed(stage: int) -> void:
-	stage_label.text = "WORLD MAP — SELECT COMBAT STAGE"
+	stage_label.text = "WORLD MAP (世界地圖)"
 
 func _on_node_selected(id: String, title: String, desc: String) -> void:
 	selected_node_id = id
@@ -59,12 +60,12 @@ func _update_node_visuals() -> void:
 	
 	# Update Flame Spire Node button text & status
 	var flame_cleared = cleared_ids.has("flame_spire")
-	btn_stage1.text = (" [CLEARED]\nStage 1: Flame Spire" if flame_cleared else "[AVAILABLE]\nStage 1: Flame Spire")
+	btn_stage1.text = ("[CLEARED]\nFlame Spire" if flame_cleared else "[AVAILABLE]\nFlame Spire")
 	btn_stage1.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "flame_spire" else Color(1, 1, 1)
 
 	# Update Tale Breeze Node button text & status
 	var breeze_cleared = cleared_ids.has("tale_breeze")
-	btn_stage2a.text = ("[CLEARED]\nStage 2: Tale Breeze" if breeze_cleared else "[AVAILABLE]\nStage 2: Tale Breeze")
+	btn_stage2a.text = ("[CLEARED]\nTale Breeze" if breeze_cleared else "[AVAILABLE]\nTale Breeze")
 	btn_stage2a.self_modulate = Color(0.4, 0.9, 0.4) if selected_node_id == "tale_breeze" else Color(1, 1, 1)
 
 	btn_stage2b.visible = false

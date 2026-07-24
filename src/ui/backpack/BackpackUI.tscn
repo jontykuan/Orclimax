@@ -49,13 +49,8 @@ size_flags_horizontal = 3
 
 [node name="ToVesselButton" type="Button" parent="MainLayout/Header"]
 layout_mode = 2
-custom_minimum_size = Vector2(160, 40)
+custom_minimum_size = Vector2(180, 40)
 text = "BACK TO VESSEL (返回載體)"
-
-[node name="ToMapButton" type="Button" parent="MainLayout/Header"]
-layout_mode = 2
-custom_minimum_size = Vector2(160, 40)
-text = "TO WORLD MAP (前往地圖)"
 
 [node name="HBox" type="HBoxContainer" parent="MainLayout"]
 layout_mode = 2
@@ -217,12 +212,20 @@ text = "Black Market Shop"
 layout_mode = 2
 text = "Reroll Shop (2 G)"
 
+[node name="Spacer" type="Control" parent="MainLayout/ShopArea/ShopHeader"]
+layout_mode = 2
+custom_minimum_size = Vector2(20, 0)
+
+[node name="ToMapButton" type="Button" parent="MainLayout/ShopArea/ShopHeader"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 36)
+theme_override_font_sizes/font_size = 15
+text = "TO WORLD MAP (前往地圖) ->"
+
 [node name="ShopItems" type="HBoxContainer" parent="MainLayout/ShopArea"]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 120)
 theme_override_constants/separation = 15
 alignment = 1
-
-[connection signal="pressed" from="MainLayout/Header/StartCombatButton" to="." method="_on_start_combat_pressed"]
 
 

@@ -67,16 +67,19 @@ namespace Orclimax.Autoload
         {
             if (vessel == null) return;
 
-            // 1. If not keeping equipped state, strip all items from current vessel to stash
-            if (!keepEquipped && CurrentVessel != null)
+            // 1. If not keeping equipped state when switching to a different vessel, move all items from current vessel to stash
+            if (!keepEquipped && CurrentVessel != null && CurrentVessel.Id != vessel.Id)
             {
                 var grid = BackpackGrid;
                 if (grid != null)
                 {
-                    var instances = grid.PlacedItems.Values.ToList();
+                    var instances = new List<GridItemInstance>(grid.PlacedItems.Values);
                     foreach (var inst in instances)
                     {
-                        Stash.Add(inst.Item);
+                        if (inst != null && inst.Item != null)
+                        {
+                            Stash.Add(inst.Item);
+                        }
                     }
                     grid.ClearGrid();
                     CurrentVessel.InitializeGrid(grid);
